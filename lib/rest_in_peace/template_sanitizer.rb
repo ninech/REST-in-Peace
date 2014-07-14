@@ -1,4 +1,4 @@
-require 'rest_in_peace'
+require 'rest_in_peace/errors'
 
 module RESTinPeace
   class TemplateSanitizer
