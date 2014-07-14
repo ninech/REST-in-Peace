@@ -16,7 +16,7 @@ module MyClient
   class Fabric < Struct.new(:id, :name, :ip)
     include RESTinPeace
 
-    define_api_methods do
+    rest_in_peace do
       resource do
         patch :save, '/fabrics/:id'
         post :create, '/fabrics'
