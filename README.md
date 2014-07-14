@@ -1,4 +1,4 @@
-# REST in Peace [![Build Status](https://travis-ci.org/ninech/REST-in-Peace.svg)](https://travis-ci.org/ninech/REST-in-Peace)
+# REST in Peace [![Build Status](https://travis-ci.org/ninech/REST-in-Peace.svg)](https://travis-ci.org/ninech/REST-in-Peace) [![Code Climate](https://codeclimate.com/github/ninech/REST-in-Peace.png)](https://codeclimate.com/github/ninech/REST-in-Peace)
 
 A ruby REST client that lets you feel like in heaven when consuming APIs.
 
