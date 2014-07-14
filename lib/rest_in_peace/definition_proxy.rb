@@ -16,5 +16,9 @@ module RESTinPeace
       method_definitions = RESTinPeace::DefinitionProxy::CollectionMethodDefinitions.new(@target)
       method_definitions.instance_eval(&block)
     end
+
+    def use_api(api)
+      @target.api = api
+    end
   end
 end

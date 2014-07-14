@@ -11,22 +11,22 @@ module RESTinPeace
     end
 
     def get
-      response = @api.get(url, @params)
+      response = api.get(url, @params)
       convert_response(response)
     end
 
     def post
-      response = @api.post(url, @params)
+      response = api.post(url, @params)
       convert_response(response)
     end
 
     def patch
-      response = @api.patch(url, @params)
+      response = api.patch(url, @params)
       convert_response(response)
     end
 
     def delete
-      response = @api.delete(url, @params)
+      response = api.delete(url, @params)
       convert_response(response)
     end
 
@@ -36,6 +36,10 @@ module RESTinPeace
 
     def convert_response(response)
       RESTinPeace::ResponseConverter.new(response, @klass).result
+    end
+
+    def api
+      @api.respond_to?(:call) ? @api.call : @api
     end
   end
 end
