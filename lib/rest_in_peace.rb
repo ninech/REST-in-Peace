@@ -1,6 +1,9 @@
 require 'rest_in_peace/definition_proxy'
 
 module RESTinPeace
+
+  class DefaultError < Exception; end
+
   def self.included(base)
     base.send :extend, ClassMethods
   end
