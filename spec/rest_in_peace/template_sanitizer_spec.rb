@@ -59,6 +59,6 @@ describe RESTinPeace::TemplateSanitizer do
     let(:url_template) { '/a/:id' }
     subject { template_sanitizer.leftover_params }
 
-    specify { expect(subject).to eq([ :name ]) }
+    specify { expect(subject).to eq({name: 'test'}) }
   end
 end
