@@ -11,27 +11,35 @@ module RESTinPeace
     end
 
     def get
-      response = api.get(url, @params)
+      response = api.get(url, params)
       convert_response(response)
     end
 
     def post
-      response = api.post(url, @params)
+      response = api.post(url, params)
       convert_response(response)
     end
 
     def patch
-      response = api.patch(url, @params)
+      response = api.patch(url, params)
       convert_response(response)
     end
 
     def delete
-      response = api.delete(url, @params)
+      response = api.delete(url, params)
       convert_response(response)
     end
 
     def url
-      RESTinPeace::TemplateSanitizer.new(@url_template, @params).url
+      sanitizer.url
+    end
+
+    def params
+      sanitizer.leftover_params
+    end
+
+    def sanitizer
+      @sanitizer ||= RESTinPeace::TemplateSanitizer.new(@url_template, @params)
     end
 
     def convert_response(response)

@@ -25,10 +25,16 @@ describe RESTinPeace::TemplateSanitizer do
       specify { expect { subject }.to raise_error(RESTinPeace::TemplateSanitizer::IncompleteParams) }
     end
 
-    context 'mutability of the url template' do
+    context 'immutability of the url template' do
       let(:params) { { id: 1 } }
       let(:url_template) { '/a/:id' }
       specify { expect { subject }.to_not change { url_template } }
+    end
+
+    context 'immutability of the params' do
+      let(:params) { { id: 1 } }
+      let(:url_template) { '/a/:id' }
+      specify { expect { subject }.to_not change { params } }
     end
   end
 
@@ -48,4 +54,11 @@ describe RESTinPeace::TemplateSanitizer do
     end
   end
 
+  describe '#leftover_params' do
+    let(:params) { { id: 1, name: 'test' } }
+    let(:url_template) { '/a/:id' }
+    subject { template_sanitizer.leftover_params }
+
+    specify { expect(subject).to eq([ :name ]) }
+  end
 end

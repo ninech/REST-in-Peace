@@ -21,9 +21,4 @@ Gem::Specification.new do |s|
   s.add_development_dependency 'rspec', '~> 3.0'
   s.add_development_dependency 'guard', '~> 2.6.1'
   s.add_development_dependency 'guard-rspec', '~> 4.2.0'
-  s.add_development_dependency 'webmock', '~> 1.18.0'
-
-  s.add_runtime_dependency 'faraday', '~> 0.9.0'
-  s.add_runtime_dependency 'faraday_middleware', '~> 0.9.1'
-  #s.add_runtime_dependency 'activesupport', '~> 4.1.4'
 end
