@@ -30,5 +30,6 @@ module MyClient
         end
       end
     end
+  end
 end
 ```
