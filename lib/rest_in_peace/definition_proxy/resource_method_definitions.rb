@@ -6,10 +6,8 @@ module RESTinPeace
       end
 
       def get(method_name, url_template, default_params = {})
-        @target.send(:define_method, method_name) do |params = {}|
-          merged_params = default_params.merge(to_h).merge(params)
-          call = RESTinPeace::ApiCall.new(api, url_template, self, merged_params)
-          call.extend(params.delete(:paginate_with)) if params[:paginate_with]
+        @target.send(:define_method, method_name) do
+          call = RESTinPeace::ApiCall.new(api, url_template, self, to_h)
           call.get
         end
       end

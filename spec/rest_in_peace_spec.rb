@@ -19,7 +19,7 @@ describe RESTinPeace do
   describe '::rest_in_peace' do
     subject { extended_class }
     specify { expect(subject).to respond_to(:rest_in_peace).with(0).arguments }
-    let(:definition_proxy) { double(RESTinPeace::DefinitionProxy) }
+    let(:definition_proxy) { object_double(RESTinPeace::DefinitionProxy) }
 
 
     it 'evaluates the given block inside the definition proxy' do

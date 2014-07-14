@@ -13,7 +13,7 @@ module RESTinPeace
           if args.last.is_a?(Hash)
             params = default_params.merge(args.pop)
           else
-            params = default_params
+            params = default_params.dup
             tokens = RESTinPeace::TemplateSanitizer.new(url_template, {}).tokens
             tokens.each do |token|
               params.merge!(token.to_sym => args.shift)

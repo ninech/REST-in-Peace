@@ -1,8 +1,8 @@
 require 'rest_in_peace/definition_proxy'
 
 describe RESTinPeace::DefinitionProxy do
-  let(:resource_definitions) { double(RESTinPeace::DefinitionProxy::ResourceMethodDefinitions) }
-  let(:collection_definitions) { double(RESTinPeace::DefinitionProxy::CollectionMethodDefinitions) }
+  let(:resource_definitions) { object_double(RESTinPeace::DefinitionProxy::ResourceMethodDefinitions) }
+  let(:collection_definitions) { object_double(RESTinPeace::DefinitionProxy::CollectionMethodDefinitions) }
   let(:target) { }
   let(:proxy) { RESTinPeace::DefinitionProxy.new(target) }
   let(:test_proc) { ->() {} }
