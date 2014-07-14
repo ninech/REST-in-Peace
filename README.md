@@ -1,6 +1,6 @@
 # REST in Peace
 
-A simple REST Client.
+A ruby REST client that lets you feel like in heaven when consuming APIs.
 
 ![logo](https://raw.githubusercontent.com/ninech/REST-in-Peace/master/images/rest_in_peace.gif)
 
