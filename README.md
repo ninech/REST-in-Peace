@@ -135,3 +135,29 @@ module MyClient
   end
 end
 ```
+
+## Helpers
+
+### SSL Configuration for Faraday
+
+There is a helper class which can be used to create a Faraday compatible SSL configuration hash (with support for client certificates).
+
+```ruby
+ssl_config = {
+  "api_url"         => "https://api-backend.dev:3443",
+  "use_cert"        => true,
+  "ssl_cert_client" => "/etc/ssl/private/client.crt",
+  "ssl_key_client"  => "/etc/ssl/private/client.key",
+  "ssl_ca"          => "/etc/ssl/certs/ca-chain.crt"
+}
+
+ssl_config_creator = RESTinPeace::SSLConfigCreator.new(ssl_config, :peer)
+ssl_config_creator.faraday_options.inspect
+# =>
+{
+  :client_cert => #<OpenSSL::X509::Certificate>,
+  :client_key  => Long key is long,
+  :ca_file     => "/etc/ssl/certs/ca-chain.crt",
+  :verify_mode => 1
+}
+```
