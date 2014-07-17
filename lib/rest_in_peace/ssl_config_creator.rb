@@ -16,7 +16,7 @@ module RESTinPeace
     end
 
     def client_cert_path
-      path(@config[:ssl_cert_client])
+      path(@config[:client_cert])
     end
 
     def client_key
@@ -24,11 +24,11 @@ module RESTinPeace
     end
 
     def client_key_path
-      path(@config[:ssl_key_client])
+      path(@config[:client_key])
     end
 
     def ca_cert_path
-      path(@config[:ssl_ca])
+      path(@config[:ca_chain])
     end
 
     def verify_mode

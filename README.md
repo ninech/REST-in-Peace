@@ -144,11 +144,9 @@ There is a helper class which can be used to create a Faraday compatible SSL con
 
 ```ruby
 ssl_config = {
-  "api_url"         => "https://api-backend.dev:3443",
-  "use_cert"        => true,
-  "ssl_cert_client" => "/etc/ssl/private/client.crt",
-  "ssl_key_client"  => "/etc/ssl/private/client.key",
-  "ssl_ca"          => "/etc/ssl/certs/ca-chain.crt"
+  "client_cert" => "/etc/ssl/private/client.crt",
+  "client_key"  => "/etc/ssl/private/client.key",
+  "ca_chain"    => "/etc/ssl/certs/ca-chain.crt"
 }
 
 ssl_config_creator = RESTinPeace::SSLConfigCreator.new(ssl_config, :peer)
