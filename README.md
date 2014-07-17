@@ -146,7 +146,7 @@ There is a helper class which can be used to create a Faraday compatible SSL con
 ssl_config = {
   "client_cert" => "/etc/ssl/private/client.crt",
   "client_key"  => "/etc/ssl/private/client.key",
-  "ca_chain"    => "/etc/ssl/certs/ca-chain.crt"
+  "ca_cert"     => "/etc/ssl/certs/ca-chain.crt"
 }
 
 ssl_config_creator = RESTinPeace::SSLConfigCreator.new(ssl_config, :peer)

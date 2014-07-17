@@ -2,9 +2,15 @@ require 'openssl'
 
 module RESTinPeace
   class SSLConfigCreator
+    class MissingParam < Exception; end
+
     def initialize(config, verify = :peer)
       @config = config
       @verify = verify
+
+      raise MissingParam, 'Specify :ca_cert in ssl options' unless @config[:ca_cert]
+      raise MissingParam, 'Specify :client_key in ssl options' unless @config[:client_key]
+      raise MissingParam, 'Specify :client_cert in ssl options' unless @config[:client_cert]
     end
 
     def faraday_options
@@ -28,7 +34,7 @@ module RESTinPeace
     end
 
     def ca_cert_path
-      path(@config[:ca_chain])
+      path(@config[:ca_cert])
     end
 
     def verify_mode
