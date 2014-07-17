@@ -50,6 +50,11 @@ describe RESTinPeace do
       specify { expect(subject.name).to eq('test42') }
       specify { expect { subject.email }.to raise_error(NoMethodError) }
     end
+
+    context 'not given param' do
+      let(:attributes) { {} }
+      specify { expect(subject.name).to eq(nil) }
+    end
   end
 
 end

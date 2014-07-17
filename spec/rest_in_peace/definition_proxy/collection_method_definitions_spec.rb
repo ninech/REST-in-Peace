@@ -59,6 +59,15 @@ describe RESTinPeace::DefinitionProxy::CollectionMethodDefinitions do
           target.find(1)
         end
 
+        it 'handles mixed parameters' do
+          expect(RESTinPeace::ApiCall).to receive(:new).
+            with(target.api, '/a/:id', target, id: 1, embed: %w(extra_field1)).
+            and_return(api_call_double)
+
+          subject.get(:find, '/a/:id', default_params)
+          target.find(1, embed: %w(extra_field1))
+        end
+
         it 'appends the given attributes' do
           expect(RESTinPeace::ApiCall).to receive(:new).
             with(target.api, '/a', target, {name: 'daniele', last_name: 'in der o'}).
