@@ -14,6 +14,9 @@ module RESTinPeace
             params = default_params.merge(args.pop)
           else
             params = default_params.dup
+          end
+
+          if args.any?
             tokens = RESTinPeace::TemplateSanitizer.new(url_template, {}).tokens
             tokens.each do |token|
               params.merge!(token.to_sym => args.shift)
