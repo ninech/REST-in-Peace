@@ -31,6 +31,12 @@ describe RESTinPeace do
     end
   end
 
+  describe '::rip_registry' do
+    subject { extended_class }
+    specify { expect(extended_class).to respond_to(:rip_registry) }
+    specify { expect(extended_class.rip_registry).to eq(collection: [], resource: []) }
+  end
+
   describe '#api' do
     subject { instance }
     specify { expect(subject).to respond_to(:api).with(0).arguments }

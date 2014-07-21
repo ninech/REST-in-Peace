@@ -34,5 +34,12 @@ module RESTinPeace
       definition_proxy = RESTinPeace::DefinitionProxy.new(self)
       definition_proxy.instance_eval(&block)
     end
+
+    def rip_registry
+      @rip_registry ||= {
+        resource: [],
+        collection: [],
+      }
+    end
   end
 end

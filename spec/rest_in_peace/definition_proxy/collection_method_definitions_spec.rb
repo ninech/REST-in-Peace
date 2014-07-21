@@ -26,6 +26,11 @@ describe RESTinPeace::DefinitionProxy::CollectionMethodDefinitions do
         to change { target.respond_to?(:find) }.from(false).to(true)
     end
 
+    it 'adds the method to the registry' do
+      subject.get(:all, '/a')
+      expect(target.rip_registry[:collection]).to eq([method: :get, name: :all, url: '/a'])
+    end
+
     describe 'the created method' do
       before do
         allow(api_call_double).to receive(:get)
