@@ -10,19 +10,8 @@ module RESTinPeace
 
       def get(method_name, url_template, default_params = {})
         @target.rip_registry[:collection] << { method: :get, name: method_name, url: url_template }
-        @target.send(:define_singleton_method, method_name) do |*args|
-          if args.last.is_a?(Hash)
-            params = default_params.merge(args.pop)
-          else
-            params = default_params.dup
-          end
-
-          if args.any?
-            tokens = RESTinPeace::TemplateSanitizer.new(url_template, {}).tokens
-            tokens.each do |token|
-              params.merge!(token.to_sym => args.shift)
-            end
-          end
+        @target.send(:define_singleton_method, method_name) do |given_params|
+          params = default_params.merge(given_params)
 
           call = RESTinPeace::ApiCall.new(api, url_template, self, params)
           call.extend(params.delete(:paginate_with)) if params[:paginate_with]

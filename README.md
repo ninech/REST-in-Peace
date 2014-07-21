@@ -87,8 +87,8 @@ class Resource
   end
 end
 
-resource = Resource.find(1) # calls "GET /rip/1"
-resource = Resource.find_on_other(42, 1337) # calls "GET /other/42/rip/1337"
+resource = Resource.find(id: 1) # calls "GET /rip/1"
+resource = Resource.find_on_other(other_id: 42, id: 1337) # calls "GET /other/42/rip/1337"
 ```
 
 #### Pagination

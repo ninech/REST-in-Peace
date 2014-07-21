@@ -41,7 +41,7 @@ describe RESTinPeace::DefinitionProxy::CollectionMethodDefinitions do
           expect(api_call_double).to_not receive(:extend)
 
           subject.get(:find, '/a/:id', default_params)
-          target.find(1)
+          target.find(id: 1)
         end
       end
 
@@ -50,30 +50,12 @@ describe RESTinPeace::DefinitionProxy::CollectionMethodDefinitions do
           expect(api_call_double).to receive(:extend)
 
           subject.get(:find, '/a/:id', default_params.merge(paginate_with: Module))
-          target.find(1)
+          target.find(id: 1)
         end
       end
 
       describe 'parameter and arguments handling' do
-        it 'converts the parameters' do
-          expect(RESTinPeace::ApiCall).to receive(:new).
-            with(target.api, '/a/:id', target, {id: 1}).
-            and_return(api_call_double)
-
-          subject.get(:find, '/a/:id', default_params)
-          target.find(1)
-        end
-
-        it 'handles mixed parameters' do
-          expect(RESTinPeace::ApiCall).to receive(:new).
-            with(target.api, '/a/:id', target, id: 1, embed: %w(extra_field1)).
-            and_return(api_call_double)
-
-          subject.get(:find, '/a/:id', default_params)
-          target.find(1, embed: %w(extra_field1))
-        end
-
-        it 'appends the given attributes' do
+        it 'uses the given attributes' do
           expect(RESTinPeace::ApiCall).to receive(:new).
             with(target.api, '/a', target, {name: 'daniele', last_name: 'in der o'}).
             and_return(api_call_double)
@@ -85,7 +67,7 @@ describe RESTinPeace::DefinitionProxy::CollectionMethodDefinitions do
         it 'does not modify the default params' do
           default_params = { per_page: 250 }
           subject.get(:find, '/a/:id', default_params)
-          target.find(1)
+          target.find(id: 1)
           expect(default_params).to eq({ per_page: 250 })
         end
       end
