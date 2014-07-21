@@ -24,6 +24,11 @@ describe RESTinPeace::DefinitionProxy::ResourceMethodDefinitions do
         to change { instance.respond_to?(method_name) }.from(false).to(true)
     end
 
+    it 'adds the method to the registry' do
+      subject.send(http_verb, method_name, url_template)
+      expect(target.rip_registry[:resource]).to eq([method: http_verb, name: method_name, url: url_template])
+    end
+
     describe 'the created method' do
       before do
         allow(api_call_double).to receive(http_verb)

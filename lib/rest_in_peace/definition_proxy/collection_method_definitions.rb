@@ -9,6 +9,7 @@ module RESTinPeace
       end
 
       def get(method_name, url_template, default_params = {})
+        @target.rip_registry[:collection] << { method: :get, name: method_name, url: url_template }
         @target.send(:define_singleton_method, method_name) do |*args|
           if args.last.is_a?(Hash)
             params = default_params.merge(args.pop)
