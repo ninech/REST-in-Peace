@@ -10,7 +10,7 @@ module RESTinPeace
 
       def get(method_name, url_template, default_params = {})
         @target.rip_registry[:collection] << { method: :get, name: method_name, url: url_template }
-        @target.send(:define_singleton_method, method_name) do |given_params|
+        @target.send(:define_singleton_method, method_name) do |given_params = {}|
           params = default_params.merge(given_params)
 
           call = RESTinPeace::ApiCall.new(api, url_template, self, params)

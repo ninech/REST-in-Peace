@@ -55,20 +55,33 @@ describe RESTinPeace::DefinitionProxy::CollectionMethodDefinitions do
       end
 
       describe 'parameter and arguments handling' do
-        it 'uses the given attributes' do
-          expect(RESTinPeace::ApiCall).to receive(:new).
-            with(target.api, '/a', target, {name: 'daniele', last_name: 'in der o'}).
-            and_return(api_call_double)
+        context 'with given attributes' do
+          it 'uses the given attributes' do
+            expect(RESTinPeace::ApiCall).to receive(:new).
+              with(target.api, '/a', target, {name: 'daniele', last_name: 'in der o'}).
+              and_return(api_call_double)
 
-          subject.get(:all, '/a', {last_name: 'in der o'})
-          target.all(name: 'daniele')
+            subject.get(:all, '/a', {last_name: 'in der o'})
+            target.all(name: 'daniele')
+          end
+
+          it 'does not modify the default params' do
+            default_params = { per_page: 250 }
+            subject.get(:find, '/a/:id', default_params)
+            target.find(id: 1)
+            expect(default_params).to eq({ per_page: 250 })
+          end
         end
 
-        it 'does not modify the default params' do
-          default_params = { per_page: 250 }
-          subject.get(:find, '/a/:id', default_params)
-          target.find(id: 1)
-          expect(default_params).to eq({ per_page: 250 })
+        context 'without any attributes' do
+          it 'uses the default params' do
+            expect(RESTinPeace::ApiCall).to receive(:new).
+              with(target.api, '/a', target, {last_name: 'in der o'}).
+              and_return(api_call_double)
+
+            subject.get(:all, '/a', {last_name: 'in der o'})
+            target.all
+          end
         end
       end
     end
