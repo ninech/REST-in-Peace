@@ -29,6 +29,14 @@ module RESTinPeace
         end
       end
 
+      def put(method_name, url_template)
+        @target.rip_registry[:resource] << { method: :put, name: method_name, url: url_template }
+        @target.send(:define_method, method_name) do
+          call = RESTinPeace::ApiCall.new(api, url_template, self, to_h)
+          call.put
+        end
+      end
+
       def delete(method_name, url_template, default_params = {})
         @target.rip_registry[:resource] << { method: :delete, name: method_name, url: url_template }
         @target.send(:define_method, method_name) do |params = {}|

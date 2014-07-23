@@ -71,6 +71,14 @@ describe RESTinPeace::DefinitionProxy::ResourceMethodDefinitions do
     end
   end
 
+  context '#put' do
+    it_behaves_like 'an instance method' do
+      let(:http_verb) { :put }
+      let(:method_name) { :update }
+      let(:url_template) { '/a/:id' }
+    end
+  end
+
   context '#delete' do
     it_behaves_like 'an instance method' do
       let(:http_verb) { :delete }

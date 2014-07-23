@@ -45,6 +45,14 @@ describe RESTinPeace::ApiCall do
     end
   end
 
+  describe '#put' do
+    let(:params) { { id: 1, name: 'test' } }
+    it 'calls the api with the parameters' do
+      expect(api).to receive(:put).with('/rip/1', { name: 'test' }).and_return(response)
+      api_call.put
+    end
+  end
+
   describe '#delete' do
     it 'calls the api with the parameters' do
       expect(api).to receive(:delete).with('/rip/1', {}).and_return(response)
