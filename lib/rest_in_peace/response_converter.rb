@@ -11,6 +11,8 @@ module RESTinPeace
         convert_from_array
       when 'Hash'
         convert_from_hash
+      when 'String'
+        @response.body
       else
         raise "Don't know how to convert #{@response.body.class}"
       end

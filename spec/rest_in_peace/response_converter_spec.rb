@@ -22,6 +22,12 @@ describe RESTinPeace::ResponseConverter do
       specify { expect(subject).to eq(OpenStruct.new(name: 'test1')) }
     end
 
+    shared_examples_for 'a string input' do
+      let(:response_body) { 'yolo binary stuff' }
+      specify { expect(subject).to be_instance_of(String) }
+      specify { expect(subject).to eq('yolo binary stuff') }
+    end
+
     context 'given type is a class' do
       let(:klass) { OpenStruct }
       context 'input is an array' do
@@ -30,6 +36,10 @@ describe RESTinPeace::ResponseConverter do
 
       context 'input is a hash' do
         it_behaves_like 'a hash input'
+      end
+
+      context 'input is a string' do
+        it_behaves_like 'a string input'
       end
     end
 
@@ -41,6 +51,10 @@ describe RESTinPeace::ResponseConverter do
 
       context 'input is a hash' do
         it_behaves_like 'a hash input'
+      end
+
+      context 'input is a string' do
+        it_behaves_like 'a string input'
       end
     end
   end
