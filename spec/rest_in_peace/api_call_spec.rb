@@ -22,7 +22,7 @@ describe RESTinPeace::ApiCall do
     context 'with more parameters than needed' do
       let(:params) { { id: 1, name: 'test' } }
       it 'uses also the additional parameters' do
-        expect(api).to receive(:get).with('/rip/1', { name: 'test' }).and_return(response)
+        expect(api).to receive(:get).with('/rip/1', name: 'test').and_return(response)
         api_call.get
       end
     end
@@ -32,7 +32,7 @@ describe RESTinPeace::ApiCall do
     let(:url_template) { '/rip' }
     let(:params) { { name: 'test' } }
     it 'calls the api with the parameters' do
-      expect(api).to receive(:post).with('/rip', { name: 'test' }).and_return(response)
+      expect(api).to receive(:post).with('/rip', name: 'test').and_return(response)
       api_call.post
     end
   end
@@ -40,8 +40,16 @@ describe RESTinPeace::ApiCall do
   describe '#patch' do
     let(:params) { { id: 1, name: 'test' } }
     it 'calls the api with the parameters' do
-      expect(api).to receive(:patch).with('/rip/1', { name: 'test' }).and_return(response)
+      expect(api).to receive(:patch).with('/rip/1', name: 'test').and_return(response)
       api_call.patch
+    end
+  end
+
+  describe '#put' do
+    let(:params) { { id: 1, name: 'test' } }
+    it 'calls the api with the parameters' do
+      expect(api).to receive(:put).with('/rip/1', name: 'test').and_return(response)
+      api_call.put
     end
   end
 

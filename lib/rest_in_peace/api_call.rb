@@ -25,6 +25,11 @@ module RESTinPeace
       convert_response(response)
     end
 
+    def put
+      response = api.put(url, params)
+      convert_response(response)
+    end
+
     def delete
       response = api.delete(url, params)
       convert_response(response)
