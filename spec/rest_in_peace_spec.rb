@@ -64,7 +64,7 @@ describe RESTinPeace do
   end
 
   describe '#update_attributes' do
-    let(:new_attributes) { { name: 'yoloswag'} }
+    let(:new_attributes) { { name: 'yoloswag' } }
     subject { instance }
     specify do
       expect { subject.update_attributes(new_attributes) }.
