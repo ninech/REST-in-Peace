@@ -16,7 +16,7 @@ module RESTinPeace
       tokens.each do |token|
         param = @params.delete(token.to_sym)
         raise IncompleteParams, "Unknown parameter for token :#{token} found" unless param
-        @url.gsub!(%r{:#{token}}, param.to_s)
+        @url.sub!(%r{:#{token}}, param.to_s)
       end
       @url
     end

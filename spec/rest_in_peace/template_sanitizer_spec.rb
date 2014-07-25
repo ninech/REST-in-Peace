@@ -19,6 +19,18 @@ describe RESTinPeace::TemplateSanitizer do
       specify { expect(subject).to eq('/a/1/b/2') }
     end
 
+    context 'tokens with substrings' do
+      let(:params) { { element: 'asd', element_id: 1 } }
+      let(:url_template) { '/a/:element/b/:element_id' }
+      specify { expect(subject).to eq('/a/asd/b/1') }
+    end
+
+    context 'tokens with substrings, reverse order' do
+      let(:params) { { element: 'asd', element_id: 1 } }
+      let(:url_template) { '/a/:element_id/b/:element' }
+      specify { expect(subject).to eq('/a/1/b/asd') }
+    end
+
     context 'incomplete params' do
       let(:params) { {} }
       let(:url_template) { '/a/:id' }
