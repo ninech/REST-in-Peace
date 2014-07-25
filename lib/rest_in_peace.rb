@@ -18,6 +18,10 @@ module RESTinPeace
     Hash[each_pair.to_a]
   end
 
+  def update_attributes(attributes)
+    update_from_hash(attributes)
+  end
+
   protected
 
   def update_from_hash(hash)
