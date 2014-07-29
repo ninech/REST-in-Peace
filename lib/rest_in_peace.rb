@@ -15,18 +15,28 @@ module RESTinPeace
   end
 
   def to_h
-    Hash[each_pair.to_a]
+    hash_representation = {}
+    attributes.map do |key|
+      value = send(key)
+      value = value.to_h if value.respond_to?(:to_h)
+      hash_representation[key] = value
+    end
+    hash_representation
   end
 
   def update_attributes(attributes)
     update_from_hash(attributes)
   end
 
+  def attributes
+    self.class.members
+  end
+
   protected
 
   def update_from_hash(hash)
     hash.each do |key, value|
-      next unless self.class.members.map(&:to_s).include?(key.to_s)
+      next unless attributes.map(&:to_s).include?(key.to_s)
       send("#{key}=", value)
     end
   end
