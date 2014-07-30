@@ -5,9 +5,8 @@ describe RESTinPeace::DefinitionProxy::CollectionMethodDefinitions do
   let(:method_name) { :find }
   let(:url_template) { '/a/:id' }
   let(:default_params) { {} }
-  let(:struct) { Struct.new(:id, :name) }
   let(:target) do
-    Class.new(struct) do
+    Class.new do
       include RESTinPeace
     end
   end

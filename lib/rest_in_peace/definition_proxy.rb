@@ -1,5 +1,6 @@
 require 'rest_in_peace/definition_proxy/resource_method_definitions'
 require 'rest_in_peace/definition_proxy/collection_method_definitions'
+require 'rest_in_peace/definition_proxy/attributes_definitions'
 
 module RESTinPeace
   class DefinitionProxy
@@ -14,6 +15,11 @@ module RESTinPeace
 
     def collection(&block)
       method_definitions = RESTinPeace::DefinitionProxy::CollectionMethodDefinitions.new(@target)
+      method_definitions.instance_eval(&block)
+    end
+
+    def attributes(&block)
+      method_definitions = RESTinPeace::DefinitionProxy::AttributesDefinitions.new(@target)
       method_definitions.instance_eval(&block)
     end
 

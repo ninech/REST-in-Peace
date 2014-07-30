@@ -16,7 +16,7 @@ module RESTinPeace
 
   def to_h
     hash_representation = {}
-    attributes.map do |key|
+    self.class.rip_attributes[:write].map do |key|
       value = send(key)
       hash_representation[key] = hash_representation_of_object(value)
     end
@@ -27,16 +27,12 @@ module RESTinPeace
     update_from_hash(attributes)
   end
 
-  def attributes
-    self.class.members
-  end
-
   protected
 
   def update_from_hash(hash)
     hash.each do |key, value|
-      next unless attributes.map(&:to_s).include?(key.to_s)
-      send("#{key}=", value)
+      next unless self.class.has_read_attribute?(key)
+      instance_variable_set("@#{key}", value)
     end
   end
 
@@ -62,6 +58,17 @@ module RESTinPeace
         resource: [],
         collection: [],
       }
+    end
+
+    def rip_attributes
+      @rip_attributes ||= {
+        read: [],
+        write: [],
+      }
+    end
+
+    def has_read_attribute?(attribute)
+      rip_attributes[:read].map(&:to_s).include?(attribute.to_s)
     end
   end
 end

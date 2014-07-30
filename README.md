@@ -22,6 +22,22 @@ There is no dependency on a specific HTTP client library but the client has been
 
 ### Configuration
 
+#### Attributes
+
+You need to specify all the attributes which should be read out of the parsed JSON. You have to specify whether an attribute
+is readonly or writeable:
+
+```ruby
+rest_in_peace do
+  attributes do
+    read :id
+    write :name
+  end
+end
+```
+
+#### API Endpoints
+
 You need to define all the API endpoints you want to consume with `RESTinPeace`. Currently the four HTTP Verbs `GET`, `POST`, `PATCH` and `DELETE` are supported.
 
 There are two sections where you can specify endpoints: `resource` and `collection`:
@@ -120,6 +136,11 @@ module MyClient
     rest_in_peace do
       use_api ->() { MyClient.api }
     
+      attributes do
+        read :id
+        write :name
+      end
+
       resource do
         patch :save, '/fabrics/:id'
         post :create, '/fabrics'

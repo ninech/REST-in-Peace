@@ -2,10 +2,16 @@ require 'rest_in_peace'
 
 describe RESTinPeace do
 
-  let(:struct) { Struct.new(:name, :my_array, :my_hash, :array_with_hash, :overridden_attribute) }
   let(:extended_class) do
-    Class.new(struct) do
+    Class.new do
       include RESTinPeace
+
+      rest_in_peace do
+        attributes do
+          read :id
+          write :name, :my_array, :my_hash, :array_with_hash, :overridden_attribute
+        end
+      end
 
       def overridden_attribute
         'something else'
@@ -58,6 +64,16 @@ describe RESTinPeace do
     specify { expect(extended_class.rip_registry).to eq(collection: [], resource: []) }
   end
 
+  describe '::rip_attributes' do
+    subject { extended_class }
+    specify { expect(extended_class).to respond_to(:rip_attributes) }
+    specify do
+      expect(extended_class.rip_attributes).to eq(
+        { read: [:id, :name, :my_array, :my_hash, :array_with_hash, :overridden_attribute],
+          write: [:name, :my_array, :my_hash, :array_with_hash, :overridden_attribute] })
+    end
+  end
+
   describe '#api' do
     subject { instance }
     specify { expect(subject).to respond_to(:api).with(0).arguments }
@@ -66,7 +82,9 @@ describe RESTinPeace do
   describe '#to_h' do
     subject { instance }
     specify { expect(subject).to respond_to(:to_h).with(0).arguments }
-    specify { expect(subject.to_h).to eq(attributes.merge(overridden_attribute: 'something else')) }
+    context 'overridden getter' do
+      specify { expect(subject.to_h).to eq(attributes.merge(overridden_attribute: 'something else')) }
+    end
 
     context 'self defined methods' do
       specify { expect(subject).to respond_to(:self_defined_method) }
@@ -95,6 +113,11 @@ describe RESTinPeace do
     context 'not given param' do
       let(:attributes) { {} }
       specify { expect(subject.name).to eq(nil) }
+    end
+
+    context 'read only param' do
+      let(:attributes) { { id: 123 } }
+      specify { expect(subject.id).to eq(123) }
     end
   end
 

@@ -3,6 +3,7 @@ require 'rest_in_peace/definition_proxy'
 describe RESTinPeace::DefinitionProxy do
   let(:resource_definitions) { object_double(RESTinPeace::DefinitionProxy::ResourceMethodDefinitions) }
   let(:collection_definitions) { object_double(RESTinPeace::DefinitionProxy::CollectionMethodDefinitions) }
+  let(:attributes_definitions) { object_double(RESTinPeace::DefinitionProxy::AttributesDefinitions) }
   let(:target) { }
   let(:proxy) { RESTinPeace::DefinitionProxy.new(target) }
   let(:test_proc) { ->() {} }
@@ -14,6 +15,8 @@ describe RESTinPeace::DefinitionProxy do
       to receive(:new).with(target).and_return(resource_definitions)
     allow(RESTinPeace::DefinitionProxy::CollectionMethodDefinitions).
       to receive(:new).with(target).and_return(collection_definitions)
+    allow(RESTinPeace::DefinitionProxy::AttributesDefinitions).
+      to receive(:new).with(target).and_return(attributes_definitions)
   end
 
   describe '#resource' do
@@ -31,6 +34,15 @@ describe RESTinPeace::DefinitionProxy do
         expect(block).to be_instance_of(Proc)
       end
       subject.collection(&test_proc)
+    end
+  end
+
+  describe '#attributes' do
+    it 'forwards the given block to a attributes method definition' do
+      expect(attributes_definitions).to receive(:instance_eval) do |&block|
+        expect(block).to be_instance_of(Proc)
+      end
+      subject.attributes(&test_proc)
     end
   end
 end
