@@ -93,7 +93,7 @@ describe RESTinPeace do
     end
 
     context 'hash' do
-      specify { expect(subject.hash_for_updates[:my_hash]).to eq({ element1: 'yolo' }) }
+      specify { expect(subject.hash_for_updates[:my_hash]).to eq(element1: 'yolo') }
     end
 
     context 'with objects assigned' do
