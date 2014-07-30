@@ -13,7 +13,11 @@ module RESTinPeace
   def initialize(attributes = {})
     attributes.each do |key, value|
       next unless self.class.has_read_attribute?(key)
-      instance_variable_set("@#{key}", value)
+      if self.class.has_write_attribute?(key)
+        update_attributes(key => value)
+      else
+        instance_variable_set("@#{key}", value)
+      end
     end
   end
 

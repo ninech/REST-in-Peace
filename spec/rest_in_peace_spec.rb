@@ -112,7 +112,18 @@ describe RESTinPeace do
 
   describe '#initialize' do
     subject { instance }
-    specify { expect(subject.name).to eq('test') }
+
+    context 'read only attribute' do
+      specify { expect { subject }.to_not raise_error }
+      specify { expect(subject.name).to eq('test') }
+    end
+
+    context 'write attribute' do
+      it 'uses the setter' do
+        expect_any_instance_of(extended_class).to receive(:my_array=)
+        subject
+      end
+    end
 
     context 'unknown params' do
       let(:attributes) { { name: 'test42', email: 'yolo@example.org' } }
