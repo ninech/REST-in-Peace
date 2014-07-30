@@ -69,8 +69,8 @@ describe RESTinPeace do
     specify { expect(extended_class).to respond_to(:rip_attributes) }
     specify do
       expect(extended_class.rip_attributes).to eq(
-        { read: [:id, :name, :my_array, :my_hash, :array_with_hash, :overridden_attribute],
-          write: [:name, :my_array, :my_hash, :array_with_hash, :overridden_attribute] })
+        read: [:id, :name, :my_array, :my_hash, :array_with_hash, :overridden_attribute],
+        write: [:name, :my_array, :my_hash, :array_with_hash, :overridden_attribute])
     end
   end
 
