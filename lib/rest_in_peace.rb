@@ -18,8 +18,7 @@ module RESTinPeace
     hash_representation = {}
     attributes.map do |key|
       value = send(key)
-      value = value.to_h if value.respond_to?(:to_h)
-      hash_representation[key] = value
+      hash_representation[key] = hash_representation_of_object(value)
     end
     hash_representation
   end
@@ -38,6 +37,15 @@ module RESTinPeace
     hash.each do |key, value|
       next unless attributes.map(&:to_s).include?(key.to_s)
       send("#{key}=", value)
+    end
+  end
+
+  def hash_representation_of_object(object)
+    return object unless object.respond_to?(:to_h)
+    if object.is_a?(Array)
+      object.map { |element| hash_representation_of_object(element) }
+    else
+      object.to_h
     end
   end
 
