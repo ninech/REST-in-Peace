@@ -11,7 +11,10 @@ module RESTinPeace
   end
 
   def initialize(attributes = {})
-    update_from_hash(attributes)
+    attributes.each do |key, value|
+      next unless self.class.has_read_attribute?(key)
+      instance_variable_set("@#{key}", value)
+    end
   end
 
   def hash_for_updates
@@ -24,17 +27,13 @@ module RESTinPeace
   end
 
   def update_attributes(attributes)
-    update_from_hash(attributes)
+    attributes.each do |key, value|
+      next unless self.class.has_write_attribute?(key)
+      send("#{key}=", value)
+    end
   end
 
   protected
-
-  def update_from_hash(hash)
-    hash.each do |key, value|
-      next unless self.class.has_read_attribute?(key)
-      instance_variable_set("@#{key}", value)
-    end
-  end
 
   def hash_representation_of_object(object)
     return object.hash_for_updates if object.respond_to?(:hash_for_updates)
@@ -66,6 +65,10 @@ module RESTinPeace
 
     def has_read_attribute?(attribute)
       rip_attributes[:read].map(&:to_s).include?(attribute.to_s)
+    end
+
+    def has_write_attribute?(attribute)
+      rip_attributes[:write].map(&:to_s).include?(attribute.to_s)
     end
   end
 end

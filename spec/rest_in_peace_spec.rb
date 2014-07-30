@@ -132,11 +132,16 @@ describe RESTinPeace do
   end
 
   describe '#update_attributes' do
-    let(:new_attributes) { { name: 'yoloswag' } }
+    let(:new_attributes) { { name: 'yoloswag', my_array: ['yoloswag'] } }
     subject { instance }
     specify do
       expect { subject.update_attributes(new_attributes) }.
-        to change(instance, :name).from(attributes[:name]).to(new_attributes[:name])
+        to change(instance, :my_array).from(attributes[:my_array]).to(new_attributes[:my_array])
+    end
+
+    specify do
+      expect { subject.update_attributes(new_attributes) }.
+        to_not change(instance, :name).from(attributes[:name])
     end
   end
 end
