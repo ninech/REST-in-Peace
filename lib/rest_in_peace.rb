@@ -14,7 +14,7 @@ module RESTinPeace
     update_from_hash(attributes)
   end
 
-  def to_h
+  def hash_for_updates
     hash_representation = {}
     self.class.rip_attributes[:write].map do |key|
       value = send(key)
@@ -37,12 +37,9 @@ module RESTinPeace
   end
 
   def hash_representation_of_object(object)
-    return object unless object.respond_to?(:to_h)
-    if object.is_a?(Array)
-      object.map { |element| hash_representation_of_object(element) }
-    else
-      object.to_h
-    end
+    return object.hash_for_updates if object.respond_to?(:hash_for_updates)
+    return object.map { |element| hash_representation_of_object(element) } if object.is_a?(Array)
+    object
   end
 
   module ClassMethods

@@ -79,23 +79,28 @@ describe RESTinPeace do
     specify { expect(subject).to respond_to(:api).with(0).arguments }
   end
 
-  describe '#to_h' do
+  describe '#hash_for_updates' do
     subject { instance }
-    specify { expect(subject).to respond_to(:to_h).with(0).arguments }
+    specify { expect(subject).to respond_to(:hash_for_updates).with(0).arguments }
+
     context 'overridden getter' do
-      specify { expect(subject.to_h).to eq(attributes.merge(overridden_attribute: 'something else')) }
+      specify { expect(subject.hash_for_updates).to eq(attributes.merge(overridden_attribute: 'something else')) }
     end
 
     context 'self defined methods' do
       specify { expect(subject).to respond_to(:self_defined_method) }
-      specify { expect(subject.to_h).to_not include(:self_defined_method) }
+      specify { expect(subject.hash_for_updates).to_not include(:self_defined_method) }
+    end
+
+    context 'hash' do
+      specify { expect(subject.hash_for_updates[:my_hash]).to eq({ element1: 'yolo' }) }
     end
 
     context 'with objects assigned' do
       let(:my_hash) { double('OtherClass') }
-      it 'deeply calls to_h' do
-        expect(my_hash).to receive(:to_h).and_return({})
-        subject.to_h
+      it 'deeply calls hash_for_updates' do
+        expect(my_hash).to receive(:hash_for_updates).and_return({})
+        subject.hash_for_updates
       end
     end
   end
