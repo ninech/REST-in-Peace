@@ -89,6 +89,8 @@ resource.create # calls "POST /rip"
 resource.reload # calls "GET /rip/1"
 ```
 
+**For any writing action (`:post`, `:put`, `:patch`) RESTinPeace will include the writable attributes in the body and `id`.**
+
 #### Collection
 
 If you define anything inside the `collection` block, it will define a method on the class:

@@ -15,7 +15,7 @@ module RESTinPeace
   end
 
   def hash_for_updates
-    hash_representation = {}
+    hash_representation = {id: id}
     self.class.rip_attributes[:write].map do |key|
       value = send(key)
       hash_representation[key] = hash_representation_of_object(value)

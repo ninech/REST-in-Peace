@@ -8,8 +8,8 @@ describe RESTinPeace do
 
       rest_in_peace do
         attributes do
-          read :id
-          write :name, :my_array, :my_hash, :array_with_hash, :overridden_attribute
+          read :id, :name
+          write :my_array, :my_hash, :array_with_hash, :overridden_attribute
         end
       end
 
@@ -29,6 +29,7 @@ describe RESTinPeace do
   let(:overridden_attribute) { 'initial value' }
   let(:attributes) do
     {
+      id: 1,
       name: name,
       my_array: my_array,
       my_hash: my_hash,
@@ -70,7 +71,7 @@ describe RESTinPeace do
     specify do
       expect(extended_class.rip_attributes).to eq(
         read: [:id, :name, :my_array, :my_hash, :array_with_hash, :overridden_attribute],
-        write: [:name, :my_array, :my_hash, :array_with_hash, :overridden_attribute])
+        write: [:my_array, :my_hash, :array_with_hash, :overridden_attribute])
     end
   end
 
@@ -83,8 +84,12 @@ describe RESTinPeace do
     subject { instance }
     specify { expect(subject).to respond_to(:hash_for_updates).with(0).arguments }
 
+    it 'adds id by default' do
+      expect(subject.hash_for_updates).to include(id: 1)
+    end
+
     context 'overridden getter' do
-      specify { expect(subject.hash_for_updates).to eq(attributes.merge(overridden_attribute: 'something else')) }
+      specify { expect(subject.hash_for_updates).to include(overridden_attribute: 'something else') }
     end
 
     context 'self defined methods' do
