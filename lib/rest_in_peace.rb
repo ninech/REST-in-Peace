@@ -12,9 +12,9 @@ module RESTinPeace
 
   def initialize(attributes = {})
     attributes.each do |key, value|
-      next unless self.class.has_read_attribute?(key)
-      if self.class.has_write_attribute?(key)
-        update_attributes(key => value)
+      next unless respond_to?(key)
+      if respond_to?("#{key}=")
+        send("#{key}=", value)
       else
         instance_variable_set("@#{key}", value)
       end
@@ -32,7 +32,7 @@ module RESTinPeace
 
   def update_attributes(attributes)
     attributes.each do |key, value|
-      next unless self.class.has_write_attribute?(key)
+      next unless respond_to?("#{key}=")
       send("#{key}=", value)
     end
   end
@@ -65,14 +65,6 @@ module RESTinPeace
         read: [],
         write: [],
       }
-    end
-
-    def has_read_attribute?(attribute)
-      rip_attributes[:read].map(&:to_s).include?(attribute.to_s)
-    end
-
-    def has_write_attribute?(attribute)
-      rip_attributes[:write].map(&:to_s).include?(attribute.to_s)
     end
   end
 end

@@ -8,13 +8,17 @@ describe RESTinPeace do
 
       rest_in_peace do
         attributes do
-          read :id, :name
+          read :id, :name, :relation
           write :my_array, :my_hash, :array_with_hash, :overridden_attribute
         end
       end
 
       def overridden_attribute
         'something else'
+      end
+
+      def relation=(v)
+        @relation = v
       end
 
       def self_defined_method
@@ -31,6 +35,7 @@ describe RESTinPeace do
     {
       id: 1,
       name: name,
+      relation: { id: 1234 },
       my_array: my_array,
       my_hash: my_hash,
       array_with_hash: array_with_hash,
@@ -70,7 +75,7 @@ describe RESTinPeace do
     specify { expect(extended_class).to respond_to(:rip_attributes) }
     specify do
       expect(extended_class.rip_attributes).to eq(
-        read: [:id, :name, :my_array, :my_hash, :array_with_hash, :overridden_attribute],
+        read: [:id, :name, :relation, :my_array, :my_hash, :array_with_hash, :overridden_attribute],
         write: [:my_array, :my_hash, :array_with_hash, :overridden_attribute])
     end
   end
@@ -119,9 +124,17 @@ describe RESTinPeace do
     end
 
     context 'write attribute' do
-      it 'uses the setter' do
-        expect_any_instance_of(extended_class).to receive(:my_array=)
-        subject
+      context 'via rip defined attribute' do
+        it 'uses the setter' do
+          expect_any_instance_of(extended_class).to receive(:my_array=)
+          subject
+        end
+      end
+      context 'self defined attribute' do
+        it 'uses the setter' do
+          expect_any_instance_of(extended_class).to receive(:relation=)
+          subject
+        end
       end
     end
 
