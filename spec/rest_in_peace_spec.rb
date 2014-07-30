@@ -2,13 +2,34 @@ require 'rest_in_peace'
 
 describe RESTinPeace do
 
-  let(:struct) { Struct.new(:name) }
+  let(:struct) { Struct.new(:name, :my_array, :my_hash, :array_with_hash, :overridden_attribute) }
   let(:extended_class) do
     Class.new(struct) do
       include RESTinPeace
+
+      def overridden_attribute
+        'something else'
+      end
+
+      def self_defined_method
+        puts 'yolo'
+      end
     end
   end
-  let(:attributes) { { name: 'test' } }
+  let(:my_array) { %w(element) }
+  let(:name) { 'test' }
+  let(:my_hash) { { element1: 'yolo' } }
+  let(:array_with_hash) { [my_hash.dup] }
+  let(:overridden_attribute) { 'initial value' }
+  let(:attributes) do
+    {
+      name: name,
+      my_array: my_array,
+      my_hash: my_hash,
+      array_with_hash: array_with_hash,
+      overridden_attribute: overridden_attribute,
+    }
+  end
   let(:instance) { extended_class.new(attributes) }
 
   describe '::api' do
@@ -45,6 +66,20 @@ describe RESTinPeace do
   describe '#to_h' do
     subject { instance }
     specify { expect(subject).to respond_to(:to_h).with(0).arguments }
+    specify { expect(subject.to_h).to eq(attributes.merge(overridden_attribute: 'something else')) }
+
+    context 'self defined methods' do
+      specify { expect(subject).to respond_to(:self_defined_method) }
+      specify { expect(subject.to_h).to_not include(:self_defined_method) }
+    end
+
+    context 'with objects assigned' do
+      let(:my_hash) { double('OtherClass') }
+      it 'deeply calls to_h' do
+        expect(my_hash).to receive(:to_h).and_return({})
+        subject.to_h
+      end
+    end
   end
 
   describe '#initialize' do
