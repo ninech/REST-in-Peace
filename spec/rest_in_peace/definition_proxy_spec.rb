@@ -4,7 +4,7 @@ describe RESTinPeace::DefinitionProxy do
   let(:resource_definitions) { object_double(RESTinPeace::DefinitionProxy::ResourceMethodDefinitions) }
   let(:collection_definitions) { object_double(RESTinPeace::DefinitionProxy::CollectionMethodDefinitions) }
   let(:attributes_definitions) { object_double(RESTinPeace::DefinitionProxy::AttributesDefinitions) }
-  let(:target) { }
+  let(:target) { double('Target') }
   let(:proxy) { RESTinPeace::DefinitionProxy.new(target) }
   let(:test_proc) { ->() {} }
 
@@ -43,6 +43,13 @@ describe RESTinPeace::DefinitionProxy do
         expect(block).to be_instance_of(Proc)
       end
       subject.attributes(&test_proc)
+    end
+  end
+
+  describe '#acts_as_active_model' do
+    it 'includes RESTinPeace::ActiveModelAPI' do
+      expect(target).to receive(:include).with(RESTinPeace::ActiveModelAPI)
+      subject.acts_as_active_model
     end
   end
 end

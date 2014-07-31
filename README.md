@@ -125,6 +125,42 @@ end
 
 An example pagination mixin with HTTP headers can be found in the [examples directory](https://github.com/ninech/REST-in-Peace/blob/master/examples) of this repo.
 
+#### ActiveModel Support
+
+For easy interoperability with Rails, there is the ability to include ActiveModel into your class. To enable this support, follow these steps:
+
+* Define a `create` method (To be called for saving new objects)
+* Define a `save` method (To be called for updates)
+* Call `acts_as_active_model` **after** your *API endpoints* and *attribute* definitions
+
+##### Example
+
+```ruby
+require 'rest_in_peace'
+
+module MyClient
+  class Fabric < Struct.new(:id, :name, :ip)
+    include RESTinPeace
+
+    rest_in_peace do
+      use_api ->() { MyClient.api }
+    
+      attributes do
+        read :id
+        write :name
+      end
+
+      resource do
+        post :create, '/fabrics'
+        patch :save, '/fabrics/:id'
+      end
+      
+      acts_as_active_model
+    end
+  end
+end
+```
+
 #### Complete Configuration
 
 ```ruby
@@ -132,7 +168,7 @@ require 'my_client/paginator'
 require 'rest_in_peace'
 
 module MyClient
-  class Fabric < Struct.new(:id, :name, :ip)
+  class Fabric
     include RESTinPeace
 
     rest_in_peace do
@@ -154,6 +190,8 @@ module MyClient
         get :all, '/fabrics', paginate_with: MyClient::Paginator
         get :find, '/fabrics/:id'
       end
+
+      acts_as_active_model
     end
   end
 end
