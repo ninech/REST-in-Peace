@@ -80,6 +80,14 @@ describe RESTinPeace do
     end
   end
 
+  describe '::rip_namespace' do
+    subject { extended_class }
+    specify { expect(subject).to respond_to(:rip_namespace) }
+    specify { expect(subject).to respond_to(:rip_namespace=) }
+    specify { expect { subject.rip_namespace = :blubb }.
+              to change { subject.rip_namespace }.from(nil).to(:blubb) }
+  end
+
   describe '#api' do
     subject { instance }
     specify { expect(subject).to respond_to(:api).with(0).arguments }
@@ -89,29 +97,50 @@ describe RESTinPeace do
     subject { instance }
     specify { expect(subject).to respond_to(:hash_for_updates).with(0).arguments }
 
-    it 'adds id by default' do
-      expect(subject.hash_for_updates).to include(id: 1)
-    end
-
-    context 'overridden getter' do
-      specify { expect(subject.hash_for_updates).to include(overridden_attribute: 'something else') }
-    end
-
-    context 'self defined methods' do
-      specify { expect(subject).to respond_to(:self_defined_method) }
-      specify { expect(subject.hash_for_updates).to_not include(:self_defined_method) }
-    end
-
-    context 'hash' do
-      specify { expect(subject.hash_for_updates[:my_hash]).to eq(element1: 'yolo') }
-    end
-
-    context 'with objects assigned' do
-      let(:my_hash) { double('OtherClass') }
-      it 'deeply calls hash_for_updates' do
-        expect(my_hash).to receive(:hash_for_updates).and_return({})
-        subject.hash_for_updates
+    context 'without a namspace defined' do
+      it 'adds id by default' do
+        expect(subject.hash_for_updates).to include(id: 1)
       end
+
+      context 'overridden getter' do
+        specify { expect(subject.hash_for_updates).to include(overridden_attribute: 'something else') }
+      end
+
+      context 'self defined methods' do
+        specify { expect(subject).to respond_to(:self_defined_method) }
+        specify { expect(subject.hash_for_updates).to_not include(:self_defined_method) }
+      end
+
+      context 'hash' do
+        specify { expect(subject.hash_for_updates[:my_hash]).to eq(element1: 'yolo') }
+      end
+
+      context 'with objects assigned' do
+        let(:my_hash) { double('OtherClass') }
+        it 'deeply calls hash_for_updates' do
+          expect(my_hash).to receive(:hash_for_updates).and_return({})
+          subject.hash_for_updates
+        end
+      end
+    end
+
+    context 'with a namspace defined' do
+      let(:extended_class) do
+        Class.new do
+          include RESTinPeace
+
+          rest_in_peace do
+            attributes do
+              read :id
+              write :name
+            end
+
+            namespace_attributes_with :blubb
+          end
+        end
+      end
+
+      specify { expect(subject.hash_for_updates).to eq(blubb: { id: 1, name: 'test' }) }
     end
   end
 

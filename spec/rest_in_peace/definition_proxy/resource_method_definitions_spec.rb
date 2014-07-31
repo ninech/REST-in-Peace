@@ -2,10 +2,10 @@ require 'rest_in_peace'
 require 'rest_in_peace/definition_proxy/resource_method_definitions'
 
 describe RESTinPeace::DefinitionProxy::ResourceMethodDefinitions do
-  let(:struct) { Struct.new(:id, :name) }
   let(:target) do
-    Class.new(struct) do
+    Class.new do
       include RESTinPeace
+      rest_in_peace { attributes { read(:id); write(:name) } }
     end
   end
   let(:instance) { target.new }

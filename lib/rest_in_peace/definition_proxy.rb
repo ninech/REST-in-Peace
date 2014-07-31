@@ -28,6 +28,10 @@ module RESTinPeace
       @target.send(:include, RESTinPeace::ActiveModelAPI)
     end
 
+    def namespace_attributes_with(namespace)
+      @target.rip_namespace = namespace
+    end
+
     def use_api(api)
       @target.api = api
     end

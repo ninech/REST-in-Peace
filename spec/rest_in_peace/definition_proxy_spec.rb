@@ -1,4 +1,5 @@
 require 'rest_in_peace/definition_proxy'
+require 'ostruct'
 
 describe RESTinPeace::DefinitionProxy do
   let(:resource_definitions) { object_double(RESTinPeace::DefinitionProxy::ResourceMethodDefinitions) }
@@ -44,6 +45,16 @@ describe RESTinPeace::DefinitionProxy do
       end
       subject.attributes(&test_proc)
     end
+  end
+
+  describe '#namespace_attributes_with' do
+    let(:target) do
+      Class.new do
+        include RESTinPeace
+      end
+    end
+    specify { expect { subject.namespace_attributes_with(:blubb) }.
+              to change { target.rip_namespace }.from(nil).to(:blubb) }
   end
 
   describe '#acts_as_active_model' do

@@ -27,7 +27,7 @@ module RESTinPeace
       value = send(key)
       hash_representation[key] = hash_representation_of_object(value)
     end
-    hash_representation
+    self.class.rip_namespace ? { self.class.rip_namespace => hash_representation } : hash_representation
   end
 
   def update_attributes(attributes)
@@ -47,6 +47,7 @@ module RESTinPeace
 
   module ClassMethods
     attr_accessor :api
+    attr_accessor :rip_namespace
 
     def rest_in_peace(&block)
       definition_proxy = RESTinPeace::DefinitionProxy.new(self)
