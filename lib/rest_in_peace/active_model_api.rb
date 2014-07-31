@@ -18,7 +18,7 @@ module RESTinPeace
       base.send(:alias_method, :save_without_dirty_tracking, :save)
       base.send(:alias_method, :save, :save_with_dirty_tracking)
 
-      base.send :define_attribute_methods, *base.rip_attributes[:write]
+      base.send :define_attribute_methods, base.rip_attributes[:write]
 
       base.rip_attributes[:write].each do |attribute|
         base.send(:define_method, "#{attribute}_with_dirty_tracking=") do |value|
