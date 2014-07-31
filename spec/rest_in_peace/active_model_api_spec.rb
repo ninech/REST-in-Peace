@@ -72,6 +72,16 @@ describe RESTinPeace do
         end
       end
     end
+
+    describe '#model_name' do
+      before do
+        def extended_class.model_name
+          ActiveModel::Name.new(self, nil, 'TemporaryClassForTests')
+        end
+      end
+      specify { expect(extended_class.model_name).to eq('TemporaryClassForTests') }
+      specify { expect(extended_class.model_name).to respond_to(:route_key) }
+    end
   end
 
   context 'instance methods' do
