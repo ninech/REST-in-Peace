@@ -73,7 +73,7 @@ describe RESTinPeace do
       end
     end
 
-    describe '#model_name' do
+    describe '::model_name' do
       before do
         def extended_class.model_name
           ActiveModel::Name.new(self, nil, 'TemporaryClassForTests')
@@ -114,6 +114,10 @@ describe RESTinPeace do
     describe 'attribute methods' do
       specify { expect(instance).to respond_to(:description_changed?) }
       specify { expect(instance).to respond_to(:title_changed?) }
+    end
+
+    describe '#to_key' do
+      specify { expect(instance.to_key).to eq([1]) }
     end
   end
 end

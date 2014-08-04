@@ -13,6 +13,7 @@ module RESTinPeace
       check_for_missing_methods(base)
 
       base.send(:include, ActiveModel::Dirty)
+      base.send(:include, ActiveModel::Conversion)
       base.extend ActiveModel::Naming
 
       base.send(:alias_method, :save_without_dirty_tracking, :save)
