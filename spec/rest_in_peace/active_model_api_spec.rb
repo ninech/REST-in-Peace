@@ -153,7 +153,7 @@ describe RESTinPeace do
         before do
           instance.description = 'value!'
         end
-        let(:response) { OpenStruct.new(body: { errors: { 'description' => ['is not empty'] }}) }
+        let(:response) { OpenStruct.new(body: { errors: { 'description' => ['is not empty'] } }) }
 
         specify { expect { instance.save }.to change { instance.errors.any? } }
         specify { expect { instance.save }.to_not change { instance.description } }
@@ -173,7 +173,7 @@ describe RESTinPeace do
         before do
           instance.description = 'value!'
         end
-        let(:response) { OpenStruct.new(body: { errors: { 'description' => ['is not empty'] }}) }
+        let(:response) { OpenStruct.new(body: { errors: { 'description' => ['is not empty'] } }) }
 
         specify { expect { instance.create }.to change { instance.errors.any? } }
         specify { expect { instance.create }.to_not change { instance.description } }
