@@ -141,19 +141,43 @@ describe RESTinPeace do
     end
 
     describe '#save' do
-      let(:response) { OpenStruct.new(body: { name: 'new name from api' }) }
+      context 'without errors' do
+        let(:response) { OpenStruct.new(body: { name: 'new name from api' }) }
 
-      specify { expect { instance.save }.to_not raise_error }
-      specify { expect(instance.save.object_id).to eq(instance.object_id) }
-      specify { expect { instance.save }.to change(instance, :name) }
+        specify { expect { instance.save }.to_not raise_error }
+        specify { expect(instance.save.object_id).to eq(instance.object_id) }
+        specify { expect { instance.save }.to change(instance, :name) }
+      end
+
+      context 'with errors' do
+        before do
+          instance.description = 'value!'
+        end
+        let(:response) { OpenStruct.new(body: { errors: { 'description' => ['is not empty'] }}) }
+
+        specify { expect { instance.save }.to change { instance.errors.any? } }
+        specify { expect { instance.save }.to_not change { instance.description } }
+      end
     end
 
     describe '#create' do
-      let(:response) { OpenStruct.new(body: { name: 'new name from api' }) }
+      context 'without errors' do
+        let(:response) { OpenStruct.new(body: { name: 'new name from api' }) }
 
-      specify { expect { instance.create }.to_not raise_error }
-      specify { expect(instance.create.object_id).to eq(instance.object_id) }
-      specify { expect { instance.create }.to change(instance, :name) }
+        specify { expect { instance.create }.to_not raise_error }
+        specify { expect(instance.create.object_id).to eq(instance.object_id) }
+        specify { expect { instance.create }.to change(instance, :name) }
+      end
+
+      context 'with errors' do
+        before do
+          instance.description = 'value!'
+        end
+        let(:response) { OpenStruct.new(body: { errors: { 'description' => ['is not empty'] }}) }
+
+        specify { expect { instance.create }.to change { instance.errors.any? } }
+        specify { expect { instance.create }.to_not change { instance.description } }
+      end
     end
 
     describe 'validation handling' do

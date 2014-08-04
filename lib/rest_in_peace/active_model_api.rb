@@ -60,14 +60,14 @@ module RESTinPeace
     def save_with_attribute_update
       result = save_without_attribute_update
       return result unless result.is_a?(self.class)
-      force_attributes_from_hash(result.to_h)
+      update_attributes_and_errors_after_write(result)
       self
     end
 
     def create_with_attribute_update
       result = create_without_attribute_update
       return result unless result.is_a?(self.class)
-      force_attributes_from_hash(result.to_h)
+      update_attributes_and_errors_after_write(result)
       self
     end
 
@@ -85,7 +85,17 @@ module RESTinPeace
 
     def errors=(new_errors)
       new_errors.each do |key, value|
-        errors.set(key, value)
+        errors.set(key.to_sym, [value].flatten)
+      end
+    end
+
+    protected
+
+    def update_attributes_and_errors_after_write(result)
+      if result.errors.any?
+        self.errors = result.errors
+      else
+        force_attributes_from_hash(result.to_h)
       end
     end
   end
