@@ -41,5 +41,9 @@ module RESTinPeace
       save_without_dirty_tracking
       @changed_attributes.clear
     end
+
+    def persisted?
+      !!id
+    end
   end
 end

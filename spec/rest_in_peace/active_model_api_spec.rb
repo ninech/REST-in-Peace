@@ -119,5 +119,16 @@ describe RESTinPeace do
     describe '#to_key' do
       specify { expect(instance.to_key).to eq([1]) }
     end
+
+    describe '#persisted?' do
+      context 'persisted model' do
+        specify { expect(instance.persisted?).to eq(true) }
+      end
+
+      context 'not yet persisted model' do
+        let(:id) { nil }
+        specify { expect(instance.persisted?).to eq(false) }
+      end
+    end
   end
 end
