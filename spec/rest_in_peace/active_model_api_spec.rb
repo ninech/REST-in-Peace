@@ -50,7 +50,7 @@ describe RESTinPeace do
         end
 
         it 'raises an error when no save method specified' do
-          expect { extended_class.new }.to raise_error(RESTinPeace::ActiveModelAPI::MissingSaveMethod)
+          expect { extended_class.new }.to raise_error(RESTinPeace::ActiveModelAPI::MissingMethod)
         end
       end
 
@@ -68,7 +68,7 @@ describe RESTinPeace do
         end
 
         it 'raises an error when no create method specified' do
-          expect { extended_class.new }.to raise_error(RESTinPeace::ActiveModelAPI::MissingSaveMethod)
+          expect { extended_class.new }.to raise_error(RESTinPeace::ActiveModelAPI::MissingMethod)
         end
       end
     end

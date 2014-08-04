@@ -2,7 +2,7 @@ require 'active_model'
 
 module RESTinPeace
   module ActiveModelAPI
-    class MissingSaveMethod < RESTinPeace::DefaultError
+    class MissingMethod < RESTinPeace::DefaultError
       def initialize(method)
         super "No #{method} method has been defined. "\
               'Maybe you called acts_as_active_model before defining the api endpoints?'
@@ -43,8 +43,8 @@ module RESTinPeace
     end
 
     def self.check_for_missing_methods(base)
-      raise MissingSaveMethod, :save unless base.instance_methods.include?(:save)
-      raise MissingSaveMethod, :create unless base.instance_methods.include?(:create)
+      raise MissingMethod, :save unless base.instance_methods.include?(:save)
+      raise MissingMethod, :create unless base.instance_methods.include?(:create)
     end
 
     def save_with_dirty_tracking
