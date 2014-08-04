@@ -96,6 +96,7 @@ describe RESTinPeace do
     before do
       extended_class.api = api_double
       allow(api_double).to receive(:put).and_return(response)
+      allow(api_double).to receive(:post).and_return(response)
     end
 
     describe '#changed?' do
@@ -145,6 +146,14 @@ describe RESTinPeace do
       specify { expect { instance.save }.to_not raise_error }
       specify { expect(instance.save.object_id).to eq(instance.object_id) }
       specify { expect { instance.save }.to change(instance, :name) }
+    end
+
+    describe '#create' do
+      let(:response) { OpenStruct.new(body: { name: 'new name from api' }) }
+
+      specify { expect { instance.create }.to_not raise_error }
+      specify { expect(instance.create.object_id).to eq(instance.object_id) }
+      specify { expect { instance.create }.to change(instance, :name) }
     end
 
     describe 'validation handling' do
