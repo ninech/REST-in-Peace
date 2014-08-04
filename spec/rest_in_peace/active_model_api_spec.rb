@@ -82,6 +82,14 @@ describe RESTinPeace do
       specify { expect(extended_class.model_name).to eq('TemporaryClassForTests') }
       specify { expect(extended_class.model_name).to respond_to(:route_key) }
     end
+
+    describe 'validation handling' do
+      specify { expect(extended_class).to respond_to(:human_attribute_name).with(2).arguments }
+      specify { expect(extended_class.human_attribute_name(:description)).to eq('description') }
+
+      specify { expect(extended_class).to respond_to(:lookup_ancestors).with(0).arguments }
+      specify { expect(extended_class.lookup_ancestors).to eq([extended_class]) }
+    end
   end
 
   context 'instance methods' do
@@ -128,6 +136,22 @@ describe RESTinPeace do
       context 'not yet persisted model' do
         let(:id) { nil }
         specify { expect(instance.persisted?).to eq(false) }
+      end
+    end
+
+    describe 'validation handling' do
+      let(:description) { 'desc' }
+
+      specify { expect(instance).to respond_to(:read_attribute_for_validation).with(1).argument }
+      specify { expect(instance.read_attribute_for_validation(:description)).to eq('desc') }
+
+      describe '#errors' do
+        specify { expect(instance.errors).to be_instance_of(ActiveModel::Errors) }
+      end
+
+      describe '#errors=' do
+        let(:errors) { { description: ['must not be empty'] } }
+        specify { expect { instance.errors = errors }.to change { instance.errors.count } }
       end
     end
   end

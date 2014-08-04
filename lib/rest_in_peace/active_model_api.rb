@@ -30,6 +30,14 @@ module RESTinPeace
         base.send(:alias_method, "#{attribute}_without_dirty_tracking=", "#{attribute}=")
         base.send(:alias_method, "#{attribute}=", "#{attribute}_with_dirty_tracking=")
       end
+
+      def base.human_attribute_name(attr, options = {})
+        attr.to_s
+      end
+
+      def base.lookup_ancestors
+        [self]
+      end
     end
 
     def self.check_for_missing_methods(base)
@@ -44,6 +52,20 @@ module RESTinPeace
 
     def persisted?
       !!id
+    end
+
+    def read_attribute_for_validation(attr)
+      send(attr)
+    end
+
+    def errors
+      @errors ||= ActiveModel::Errors.new(self)
+    end
+
+    def errors=(new_errors)
+      new_errors.each do |key, value|
+        errors.set(key, value)
+      end
     end
   end
 end
