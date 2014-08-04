@@ -70,6 +70,12 @@ describe RESTinPeace::DefinitionProxy::CollectionMethodDefinitions do
             target.find(id: 1)
             expect(default_params).to eq({ per_page: 250 })
           end
+
+          it 'raises an error when param is not a hash' do
+            subject.get(:find, '/a/:id', default_params)
+
+            expect { target.find(1) }.to raise_error(RESTinPeace::DefinitionProxy::InvalidArgument)
+          end
         end
 
         context 'without any attributes' do
