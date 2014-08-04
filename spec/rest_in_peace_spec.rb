@@ -140,7 +140,7 @@ describe RESTinPeace do
         end
       end
 
-      specify { expect(subject.hash_for_updates).to eq(blubb: { id: 1, name: 'test' }) }
+      specify { expect(subject.hash_for_updates).to eq(id: 1, blubb: { id: 1, name: 'test' }) }
     end
   end
 

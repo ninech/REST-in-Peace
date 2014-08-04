@@ -27,7 +27,11 @@ module RESTinPeace
       value = send(key)
       hash_representation[key] = hash_representation_of_object(value)
     end
-    self.class.rip_namespace ? { self.class.rip_namespace => hash_representation } : hash_representation
+    if self.class.rip_namespace
+      { id: id, self.class.rip_namespace => hash_representation }
+    else
+      hash_representation
+    end
   end
 
   def update_attributes(attributes)
