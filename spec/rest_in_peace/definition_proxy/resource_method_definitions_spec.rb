@@ -5,7 +5,13 @@ describe RESTinPeace::DefinitionProxy::ResourceMethodDefinitions do
   let(:target) do
     Class.new do
       include RESTinPeace
-      rest_in_peace { attributes { read(:id); write(:name) } }
+      rest_in_peace do
+        attributes do
+          read :id
+          write :name
+        end
+      end
+
     end
   end
   let(:instance) { target.new }

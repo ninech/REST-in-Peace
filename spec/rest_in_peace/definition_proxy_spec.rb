@@ -1,3 +1,4 @@
+require 'rest_in_peace'
 require 'rest_in_peace/definition_proxy'
 require 'ostruct'
 
@@ -53,8 +54,10 @@ describe RESTinPeace::DefinitionProxy do
         include RESTinPeace
       end
     end
-    specify { expect { subject.namespace_attributes_with(:blubb) }.
-              to change { target.rip_namespace }.from(nil).to(:blubb) }
+    it 'configures the namespace' do
+      expect { subject.namespace_attributes_with(:blubb) }.
+        to change { target.rip_namespace }.from(nil).to(:blubb)
+    end
   end
 
   describe '#acts_as_active_model' do

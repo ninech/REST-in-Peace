@@ -84,8 +84,10 @@ describe RESTinPeace do
     subject { extended_class }
     specify { expect(subject).to respond_to(:rip_namespace) }
     specify { expect(subject).to respond_to(:rip_namespace=) }
-    specify { expect { subject.rip_namespace = :blubb }.
-              to change { subject.rip_namespace }.from(nil).to(:blubb) }
+    it 'allows setting the namespace' do
+      expect { subject.rip_namespace = :blubb }.
+        to change { subject.rip_namespace }.from(nil).to(:blubb)
+    end
   end
 
   describe '#api' do
