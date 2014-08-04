@@ -5,7 +5,6 @@ require 'rest_in_peace/active_model_api'
 
 module RESTinPeace
   class DefinitionProxy
-
     class InvalidArgument < RESTinPeace::DefaultError
       def initialize
         super('Given parameter must respond to `merge`.')
