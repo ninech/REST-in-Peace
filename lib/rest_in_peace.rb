@@ -11,14 +11,7 @@ module RESTinPeace
   end
 
   def initialize(attributes = {})
-    attributes.each do |key, value|
-      next unless respond_to?(key)
-      if respond_to?("#{key}=")
-        send("#{key}=", value)
-      else
-        instance_variable_set("@#{key}", value)
-      end
-    end
+    force_attributes_from_hash(attributes)
   end
 
   def hash_for_updates
@@ -41,7 +34,26 @@ module RESTinPeace
     end
   end
 
+  def to_h
+    hash_representation = {}
+    self.class.rip_attributes.values.flatten.each do |attr|
+      hash_representation[attr] = send(attr)
+    end
+    hash_representation
+  end
+
   protected
+
+  def force_attributes_from_hash(attributes)
+    attributes.each do |key, value|
+      next unless respond_to?(key)
+      if respond_to?("#{key}=")
+        send("#{key}=", value)
+      else
+        instance_variable_set("@#{key}", value)
+      end
+    end
+  end
 
   def hash_representation_of_object(object)
     return object.hash_for_updates if object.respond_to?(:hash_for_updates)

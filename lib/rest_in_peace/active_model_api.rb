@@ -18,6 +18,8 @@ module RESTinPeace
 
       base.send(:alias_method, :save_without_dirty_tracking, :save)
       base.send(:alias_method, :save, :save_with_dirty_tracking)
+      base.send(:alias_method, :save_without_attribute_update, :save)
+      base.send(:alias_method, :save, :save_with_attribute_update)
 
       base.send :define_attribute_methods, base.rip_attributes[:write]
 
@@ -46,8 +48,19 @@ module RESTinPeace
     end
 
     def save_with_dirty_tracking
-      save_without_dirty_tracking
-      @changed_attributes.clear
+      save_without_dirty_tracking.tap do
+        @changed_attributes.clear if @changed_attributes
+      end
+    end
+
+    def save_with_attribute_update
+      result = save_without_attribute_update
+      if result.is_a?(self.class)
+        force_attributes_from_hash(result.to_h)
+        self
+      else
+        result
+      end
     end
 
     def persisted?

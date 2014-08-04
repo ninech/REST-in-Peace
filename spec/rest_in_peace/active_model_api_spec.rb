@@ -139,6 +139,14 @@ describe RESTinPeace do
       end
     end
 
+    describe '#save' do
+      let(:response) { OpenStruct.new(body: { name: 'new name from api' }) }
+
+      specify { expect { instance.save }.to_not raise_error }
+      specify { expect(instance.save.object_id).to eq(instance.object_id) }
+      specify { expect { instance.save }.to change(instance, :name) }
+    end
+
     describe 'validation handling' do
       let(:description) { 'desc' }
 

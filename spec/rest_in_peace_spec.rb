@@ -95,6 +95,11 @@ describe RESTinPeace do
     specify { expect(subject).to respond_to(:api).with(0).arguments }
   end
 
+  describe '#to_h' do
+    subject { instance.to_h }
+    specify { expect(subject).to eq(attributes.merge(overridden_attribute: 'something else')) }
+  end
+
   describe '#hash_for_updates' do
     subject { instance }
     specify { expect(subject).to respond_to(:hash_for_updates).with(0).arguments }
