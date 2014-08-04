@@ -19,12 +19,6 @@ module RESTinPeace
       base.send(:alias_method, :save_without_dirty_tracking, :save)
       base.send(:alias_method, :save, :save_with_dirty_tracking)
 
-      base.send(:alias_method, :save_without_attribute_update, :save)
-      base.send(:alias_method, :save, :save_with_attribute_update)
-
-      base.send(:alias_method, :create_without_attribute_update, :create)
-      base.send(:alias_method, :create, :create_with_attribute_update)
-
       base.send :define_attribute_methods, base.rip_attributes[:write]
 
       base.rip_attributes[:write].each do |attribute|
@@ -57,20 +51,6 @@ module RESTinPeace
       end
     end
 
-    def save_with_attribute_update
-      result = save_without_attribute_update
-      return result unless result.is_a?(self.class)
-      update_attributes_and_errors_after_write(result)
-      self
-    end
-
-    def create_with_attribute_update
-      result = create_without_attribute_update
-      return result unless result.is_a?(self.class)
-      update_attributes_and_errors_after_write(result)
-      self
-    end
-
     def persisted?
       !!id
     end
@@ -86,16 +66,6 @@ module RESTinPeace
     def errors=(new_errors)
       new_errors.each do |key, value|
         errors.set(key.to_sym, [value].flatten)
-      end
-    end
-
-    protected
-
-    def update_attributes_and_errors_after_write(result)
-      if result.errors.any?
-        self.errors = result.errors
-      else
-        force_attributes_from_hash(result.to_h)
       end
     end
   end

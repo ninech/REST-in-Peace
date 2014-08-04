@@ -42,8 +42,6 @@ module RESTinPeace
     hash_representation
   end
 
-  protected
-
   def force_attributes_from_hash(attributes)
     attributes.each do |key, value|
       next unless respond_to?(key)

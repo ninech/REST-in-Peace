@@ -157,6 +157,7 @@ describe RESTinPeace do
 
         specify { expect { instance.save }.to change { instance.errors.any? } }
         specify { expect { instance.save }.to_not change { instance.description } }
+        specify { expect { instance.save }.to_not change { instance.name } }
       end
     end
 
@@ -177,6 +178,7 @@ describe RESTinPeace do
 
         specify { expect { instance.create }.to change { instance.errors.any? } }
         specify { expect { instance.create }.to_not change { instance.description } }
+        specify { expect { instance.create }.to_not change { instance.name } }
       end
     end
 
