@@ -37,11 +37,10 @@ module RESTinPeace
         end
       end
 
-      def delete(method_name, url_template, default_params = {})
+      def delete(method_name, url_template)
         @target.rip_registry[:resource] << { method: :delete, name: method_name, url: url_template }
-        @target.send(:define_method, method_name) do |params = {}|
-          merged_params = default_params.merge(hash_for_updates).merge(params)
-          call = RESTinPeace::ApiCall.new(api, url_template, self, merged_params)
+        @target.send(:define_method, method_name) do
+          call = RESTinPeace::ApiCall.new(api, url_template, self, id: id)
           call.delete
         end
       end
