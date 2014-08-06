@@ -210,7 +210,7 @@ ssl_config = {
   "ca_cert"     => "/etc/ssl/certs/ca-chain.crt"
 }
 
-ssl_config_creator = RESTinPeace::SSLConfigCreator.new(ssl_config, :peer)
+ssl_config_creator = RESTinPeace::Faraday::SSLConfigCreator.new(ssl_config, :peer)
 ssl_config_creator.faraday_options.inspect
 # =>
 {
@@ -219,4 +219,16 @@ ssl_config_creator.faraday_options.inspect
   :ca_file     => "/etc/ssl/certs/ca-chain.crt",
   :verify_mode => 1
 }
+```
+
+### Faraday Middleware: RIP Raise Errors
+
+This middleware is mostly equivalent to [this one](https://github.com/lostisland/faraday/blob/cf549f4d883a3cae15db0d835628daa33f6f3a2b/lib/faraday/response/raise_error.rb) but it does not raise an error when the HTTP status code is `422` as this code is used to return validation errors.
+
+```ruby
+Faraday.new do |faraday|
+  # ...
+  faraday.response :rip_raise_errors
+  # ...
+end
 ```
