@@ -15,7 +15,12 @@ module RESTinPeace
       end
 
       def faraday_options
-        {client_cert: client_cert, client_key: client_key, ca_file: ca_cert_path, verify_mode: verify_mode}
+        {
+          client_cert: client_cert,
+          client_key: client_key,
+          ca_file: ca_cert_path,
+          verify_mode: verify_mode,
+        }
       end
 
       def client_cert
