@@ -2,13 +2,23 @@ require 'rest_in_peace'
 
 describe RESTinPeace do
 
-  let(:struct) { Struct.new(:name, :my_array, :my_hash, :array_with_hash, :overridden_attribute) }
   let(:extended_class) do
-    Class.new(struct) do
+    Class.new do
       include RESTinPeace
+
+      rest_in_peace do
+        attributes do
+          read :id, :name, :relation
+          write :my_array, :my_hash, :array_with_hash, :overridden_attribute
+        end
+      end
 
       def overridden_attribute
         'something else'
+      end
+
+      def relation=(v)
+        @relation = v
       end
 
       def self_defined_method
@@ -23,7 +33,9 @@ describe RESTinPeace do
   let(:overridden_attribute) { 'initial value' }
   let(:attributes) do
     {
+      id: 1,
       name: name,
+      relation: { id: 1234 },
       my_array: my_array,
       my_hash: my_hash,
       array_with_hash: array_with_hash,
@@ -58,33 +70,109 @@ describe RESTinPeace do
     specify { expect(extended_class.rip_registry).to eq(collection: [], resource: []) }
   end
 
+  describe '::rip_attributes' do
+    subject { extended_class }
+    specify { expect(extended_class).to respond_to(:rip_attributes) }
+    specify do
+      expect(extended_class.rip_attributes).to eq(
+        read: [:id, :name, :relation, :my_array, :my_hash, :array_with_hash, :overridden_attribute],
+        write: [:my_array, :my_hash, :array_with_hash, :overridden_attribute])
+    end
+  end
+
+  describe '::rip_namespace' do
+    subject { extended_class }
+    specify { expect(subject).to respond_to(:rip_namespace) }
+    specify { expect(subject).to respond_to(:rip_namespace=) }
+    it 'allows setting the namespace' do
+      expect { subject.rip_namespace = :blubb }.
+        to change { subject.rip_namespace }.from(nil).to(:blubb)
+    end
+  end
+
   describe '#api' do
     subject { instance }
     specify { expect(subject).to respond_to(:api).with(0).arguments }
   end
 
   describe '#to_h' do
-    subject { instance }
-    specify { expect(subject).to respond_to(:to_h).with(0).arguments }
-    specify { expect(subject.to_h).to eq(attributes.merge(overridden_attribute: 'something else')) }
+    subject { instance.to_h }
+    specify { expect(subject).to eq(attributes.merge(overridden_attribute: 'something else')) }
+  end
 
-    context 'self defined methods' do
-      specify { expect(subject).to respond_to(:self_defined_method) }
-      specify { expect(subject.to_h).to_not include(:self_defined_method) }
+  describe '#hash_for_updates' do
+    subject { instance }
+    specify { expect(subject).to respond_to(:hash_for_updates).with(0).arguments }
+
+    context 'without a namspace defined' do
+      it 'adds id by default' do
+        expect(subject.hash_for_updates).to include(id: 1)
+      end
+
+      context 'overridden getter' do
+        specify { expect(subject.hash_for_updates).to include(overridden_attribute: 'something else') }
+      end
+
+      context 'self defined methods' do
+        specify { expect(subject).to respond_to(:self_defined_method) }
+        specify { expect(subject.hash_for_updates).to_not include(:self_defined_method) }
+      end
+
+      context 'hash' do
+        specify { expect(subject.hash_for_updates[:my_hash]).to eq(element1: 'yolo') }
+      end
+
+      context 'with objects assigned' do
+        let(:my_hash) { double('OtherClass') }
+        it 'deeply calls hash_for_updates' do
+          expect(my_hash).to receive(:hash_for_updates).and_return({})
+          subject.hash_for_updates
+        end
+      end
     end
 
-    context 'with objects assigned' do
-      let(:my_hash) { double('OtherClass') }
-      it 'deeply calls to_h' do
-        expect(my_hash).to receive(:to_h).and_return({})
-        subject.to_h
+    context 'with a namspace defined' do
+      let(:extended_class) do
+        Class.new do
+          include RESTinPeace
+
+          rest_in_peace do
+            attributes do
+              read :id
+              write :name
+            end
+
+            namespace_attributes_with :blubb
+          end
+        end
       end
+
+      specify { expect(subject.hash_for_updates).to eq(id: 1, blubb: { id: 1, name: 'test' }) }
     end
   end
 
   describe '#initialize' do
     subject { instance }
-    specify { expect(subject.name).to eq('test') }
+
+    context 'read only attribute' do
+      specify { expect { subject }.to_not raise_error }
+      specify { expect(subject.name).to eq('test') }
+    end
+
+    context 'write attribute' do
+      context 'via rip defined attribute' do
+        it 'uses the setter' do
+          expect_any_instance_of(extended_class).to receive(:my_array=)
+          subject
+        end
+      end
+      context 'self defined attribute' do
+        it 'uses the setter' do
+          expect_any_instance_of(extended_class).to receive(:relation=)
+          subject
+        end
+      end
+    end
 
     context 'unknown params' do
       let(:attributes) { { name: 'test42', email: 'yolo@example.org' } }
@@ -96,14 +184,24 @@ describe RESTinPeace do
       let(:attributes) { {} }
       specify { expect(subject.name).to eq(nil) }
     end
+
+    context 'read only param' do
+      let(:attributes) { { id: 123 } }
+      specify { expect(subject.id).to eq(123) }
+    end
   end
 
   describe '#update_attributes' do
-    let(:new_attributes) { { name: 'yoloswag' } }
+    let(:new_attributes) { { name: 'yoloswag', my_array: ['yoloswag'] } }
     subject { instance }
     specify do
       expect { subject.update_attributes(new_attributes) }.
-        to change(instance, :name).from(attributes[:name]).to(new_attributes[:name])
+        to change(instance, :my_array).from(attributes[:my_array]).to(new_attributes[:my_array])
+    end
+
+    specify do
+      expect { subject.update_attributes(new_attributes) }.
+        to_not change(instance, :name).from(attributes[:name])
     end
   end
 end

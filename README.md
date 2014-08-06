@@ -22,6 +22,22 @@ There is no dependency on a specific HTTP client library but the client has been
 
 ### Configuration
 
+#### Attributes
+
+You need to specify all the attributes which should be read out of the parsed JSON. You have to specify whether an attribute
+is readonly or writeable:
+
+```ruby
+rest_in_peace do
+  attributes do
+    read :id
+    write :name
+  end
+end
+```
+
+#### API Endpoints
+
 You need to define all the API endpoints you want to consume with `RESTinPeace`. Currently the four HTTP Verbs `GET`, `POST`, `PATCH` and `DELETE` are supported.
 
 There are two sections where you can specify endpoints: `resource` and `collection`:
@@ -73,6 +89,8 @@ resource.create # calls "POST /rip"
 resource.reload # calls "GET /rip/1"
 ```
 
+**For any writing action (`:post`, `:put`, `:patch`) RESTinPeace will include the writable attributes in the body and `id`.**
+
 #### Collection
 
 If you define anything inside the `collection` block, it will define a method on the class:
@@ -107,10 +125,17 @@ end
 
 An example pagination mixin with HTTP headers can be found in the [examples directory](https://github.com/ninech/REST-in-Peace/blob/master/examples) of this repo.
 
-#### Complete Configuration
+#### ActiveModel Support
+
+For easy interoperability with Rails, there is the ability to include ActiveModel into your class. To enable this support, follow these steps:
+
+* Define a `create` method (To be called for saving new objects)
+* Define a `save` method (To be called for updates)
+* Call `acts_as_active_model` **after** your *API endpoints* and *attribute* definitions
+
+##### Example
 
 ```ruby
-require 'my_client/paginator'
 require 'rest_in_peace'
 
 module MyClient
@@ -120,6 +145,40 @@ module MyClient
     rest_in_peace do
       use_api ->() { MyClient.api }
     
+      attributes do
+        read :id
+        write :name
+      end
+
+      resource do
+        post :create, '/fabrics'
+        patch :save, '/fabrics/:id'
+      end
+      
+      acts_as_active_model
+    end
+  end
+end
+```
+
+#### Complete Configuration
+
+```ruby
+require 'my_client/paginator'
+require 'rest_in_peace'
+
+module MyClient
+  class Fabric
+    include RESTinPeace
+
+    rest_in_peace do
+      use_api ->() { MyClient.api }
+    
+      attributes do
+        read :id
+        write :name
+      end
+
       resource do
         patch :save, '/fabrics/:id'
         post :create, '/fabrics'
@@ -131,6 +190,8 @@ module MyClient
         get :all, '/fabrics', paginate_with: MyClient::Paginator
         get :find, '/fabrics/:id'
       end
+
+      acts_as_active_model
     end
   end
 end

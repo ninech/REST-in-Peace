@@ -5,9 +5,8 @@ describe RESTinPeace::DefinitionProxy::CollectionMethodDefinitions do
   let(:method_name) { :find }
   let(:url_template) { '/a/:id' }
   let(:default_params) { {} }
-  let(:struct) { Struct.new(:id, :name) }
   let(:target) do
-    Class.new(struct) do
+    Class.new do
       include RESTinPeace
     end
   end
@@ -70,6 +69,12 @@ describe RESTinPeace::DefinitionProxy::CollectionMethodDefinitions do
             subject.get(:find, '/a/:id', default_params)
             target.find(id: 1)
             expect(default_params).to eq({ per_page: 250 })
+          end
+
+          it 'raises an error when param is not a hash' do
+            subject.get(:find, '/a/:id', default_params)
+
+            expect { target.find(1) }.to raise_error(RESTinPeace::DefinitionProxy::InvalidArgument)
           end
         end
 
