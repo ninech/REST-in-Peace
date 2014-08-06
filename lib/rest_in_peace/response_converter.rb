@@ -6,44 +6,46 @@ module RESTinPeace
       end
     end
 
+    attr_accessor :body, :klass, :existing_instance
+
     def initialize(response, instance_or_class)
-      @response = response
+      self.body = response.body
 
       if instance_or_class.respond_to?(:new)
-        @class = instance_or_class
-        @existing_instance = new_instance
+        self.klass = instance_or_class
+        self.existing_instance = new_instance
       else
-        @class = instance_or_class.class
-        @existing_instance = instance_or_class
+        self.klass = instance_or_class.class
+        self.existing_instance = instance_or_class
       end
     end
 
     def result
-      case @response.body.class.to_s
+      case body.class.to_s
       when 'Array'
         convert_from_array
       when 'Hash'
         convert_from_hash
       when 'String'
-        @response.body
+        body
       else
-        raise UnknownConvertStrategy, @response.body.class
+        raise UnknownConvertStrategy, body.class
       end
     end
 
     def convert_from_array
-      @response.body.map do |entity|
+      body.map do |entity|
         convert_from_hash(entity, new_instance)
       end
     end
 
-    def convert_from_hash(entity = @response.body, instance = @existing_instance)
+    def convert_from_hash(entity = body, instance = existing_instance)
       instance.force_attributes_from_hash entity
       instance
     end
 
     def new_instance
-      @class.new
+      klass.new
     end
   end
 end
