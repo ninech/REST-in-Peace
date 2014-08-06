@@ -40,6 +40,11 @@ describe RESTinPeace::ResponseConverter do
       specify { expect(subject).to eq('yolo binary stuff') }
     end
 
+    shared_examples_for 'an unknown input do' do
+      let(:response_body) { Object }
+      specify { expect { subject }.to raise_error(RESTinPeace::ResponseConverter::UnknownConvertStrategy) }
+    end
+
     context 'given type is a class' do
       let(:klass) { extended_class }
       context 'input is an array' do

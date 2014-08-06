@@ -1,8 +1,21 @@
 module RESTinPeace
   class ResponseConverter
-    def initialize(response, klass)
+    class UnknownConvertStrategy < RESTinPeace::DefaultError
+      def initialize(klass)
+        super("Don't know how to convert #{klass}")
+      end
+    end
+
+    def initialize(response, instance_or_class)
       @response = response
-      @klass = klass
+
+      if instance_or_class.respond_to?(:new)
+        @class = instance_or_class
+        @existing_instance = new_instance
+      else
+        @class = instance_or_class.class
+        @existing_instance = instance_or_class
+      end
     end
 
     def result
@@ -14,29 +27,23 @@ module RESTinPeace
       when 'String'
         @response.body
       else
-        raise "Don't know how to convert #{@response.body.class}"
+        raise UnknownConvertStrategy, @response.body.class
       end
     end
 
     def convert_from_array
-      @klass = @klass.class if existing_object?
       @response.body.map do |entity|
-        convert_from_hash(entity)
+        convert_from_hash(entity, new_instance)
       end
     end
 
-    def convert_from_hash(entity = @response.body)
-      object.tap do |obj|
-        obj.force_attributes_from_hash entity
-      end
+    def convert_from_hash(entity = @response.body, instance = @existing_instance)
+      instance.force_attributes_from_hash entity
+      instance
     end
 
-    def object
-      existing_object? ? @klass : @klass.new
-    end
-
-    def existing_object?
-      !@klass.respond_to?(:new)
+    def new_instance
+      @class.new
     end
   end
 end
