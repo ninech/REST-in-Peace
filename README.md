@@ -59,12 +59,16 @@ You need to specify the HTTP client library to use. You can either specify a blo
 
 ```ruby
 class Resource
+  include RESTinPeace
+  
   rest_in_peace do
     use_api ->() { Faraday.new(url: 'http://rip.dev') }
   end
 end
 
 class ResourceTwo
+  include RESTinPeace
+  
   rest_in_peace do
     use_api Faraday.new(url: 'http://rip.dev')
   end
@@ -76,6 +80,8 @@ end
 If you define anything inside the `resource` block, it will define a method on the instances of the class:
 ```ruby
 class Resource
+  include RESTinPeace
+  
   rest_in_peace do
     resource do
       get :reload, '/rip/:id'
@@ -97,6 +103,8 @@ If you define anything inside the `collection` block, it will define a method on
 
 ```ruby
 class Resource
+  include RESTinPeace
+  
   rest_in_peace do
     collection do
       get :find, '/rip/:id'
@@ -115,6 +123,8 @@ You can define your own pagination module which will be mixed in when calling th
 
 ```ruby
 class Resource
+  include RESTinPeace
+  
   rest_in_peace do
     collection do
       get :all, '/rips', paginate_with: MyClient::Paginator
@@ -139,7 +149,7 @@ For easy interoperability with Rails, there is the ability to include ActiveMode
 require 'rest_in_peace'
 
 module MyClient
-  class Fabric < Struct.new(:id, :name, :ip)
+  class Fabric
     include RESTinPeace
 
     rest_in_peace do
