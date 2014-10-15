@@ -8,6 +8,7 @@ module RESTinPeace
     def initialize(url_template, params)
       @url_template = url_template
       @params = params.dup
+      @url = nil
     end
 
     def url
