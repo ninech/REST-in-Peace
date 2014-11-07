@@ -32,7 +32,7 @@ module RESTinPeace
       end
 
       def client_key
-        OpenSSL::PKey::RSA.new(open_file(client_key_path))
+        OpenSSL::PKey::RSA.new open_file(client_key_path), @config[:client_key_passphrase]
       end
 
       def client_key_path
