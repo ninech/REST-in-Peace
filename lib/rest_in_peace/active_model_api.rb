@@ -12,24 +12,11 @@ module RESTinPeace
     def self.included(base)
       check_for_missing_methods(base)
 
-      base.send(:include, ActiveModel::Dirty)
       base.send(:include, ActiveModel::Conversion)
       base.extend ActiveModel::Naming
 
       base.send(:alias_method, :save_without_dirty_tracking, :save)
       base.send(:alias_method, :save, :save_with_dirty_tracking)
-
-      base.send :define_attribute_methods, base.rip_attributes[:write]
-
-      base.rip_attributes[:write].each do |attribute|
-        base.send(:define_method, "#{attribute}_with_dirty_tracking=") do |value|
-          attribute_will_change!(attribute) unless send(attribute) == value
-          send("#{attribute}_without_dirty_tracking=", value)
-        end
-
-        base.send(:alias_method, "#{attribute}_without_dirty_tracking=", "#{attribute}=")
-        base.send(:alias_method, "#{attribute}=", "#{attribute}_with_dirty_tracking=")
-      end
 
       def base.human_attribute_name(attr, options = {})
         attr.to_s
@@ -47,7 +34,7 @@ module RESTinPeace
 
     def save_with_dirty_tracking
       save_without_dirty_tracking.tap do
-        @changed_attributes.clear if @changed_attributes
+        clear_changes
       end
     end
 
