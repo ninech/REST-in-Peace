@@ -38,9 +38,9 @@ end
 
 #### API Endpoints
 
-You need to define all the API endpoints you want to consume with `RESTinPeace`. Currently the four HTTP Verbs `GET`, `POST`, `PATCH` and `DELETE` are supported.
+You need to define all the API endpoints you want to consume with `RESTinPeace`. Currently the four HTTP verbs `GET`, `POST`, `PATCH` and `DELETE` are supported.
 
-There are two sections where you can specify endpoints: `resource` and `collection`:
+There are two sections where you can specify endpoints: `resource` and `collection`. `collection` supports the HTTP verb `GET` only.
 
 ```ruby
 rest_in_peace do
