@@ -95,7 +95,7 @@ resource.create # calls "POST /rip"
 resource.reload # calls "GET /rip/1"
 ```
 
-**For any writing action (`:post`, `:put`, `:patch`) RESTinPeace will include the writable attributes in the body and `id`.**
+**For any writing action (`:post`, `:put`, `:patch`) RESTinPeace will include the *changed* attributes in the body and `id`.**
 
 #### Collection
 
