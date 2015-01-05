@@ -235,7 +235,7 @@ describe RESTinPeace do
       specify { expect(instance.changed?).to eq(true) }
     end
 
-    context 'a instance with cleared changes' do
+    context 'a saved instance' do
       before do
         instance.description = 'new value'
         instance.clear_changes

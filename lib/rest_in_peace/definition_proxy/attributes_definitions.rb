@@ -13,7 +13,7 @@ module RESTinPeace
       def write(*attributes)
         read(*attributes)
         @target.send :attr_writer, *attributes
-        @target.send :define_attribute_methods, *attributes
+        @target.send :define_attribute_methods, attributes
         @target.rip_attributes[:write].concat(attributes)
 
         attributes.each do |attribute|

@@ -31,8 +31,15 @@ module RESTinPeace
   end
 
   def clear_changes
-    return unless @changed_attributes
-    @changed_attributes.clear
+    case
+    when respond_to?(:clear_changes_information) # ActiveModel >= 4.2
+      clear_changes_information
+    when respond_to?(:reset_changes) # ActiveModel >= 4.0 && <= 4.1
+      reset_changes
+    else # ActiveModel <= 3.2
+      return unless @changed_attributes
+      @changed_attributes.clear
+    end
   end
 
   def update_attributes(attributes)
