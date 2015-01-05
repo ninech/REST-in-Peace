@@ -1,4 +1,5 @@
 require 'active_model'
+require 'active_support/core_ext/object/blank'
 
 module RESTinPeace
   module ActiveModelAPI
