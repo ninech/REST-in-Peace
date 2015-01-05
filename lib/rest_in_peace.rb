@@ -1,9 +1,12 @@
+require 'active_support/core_ext/hash/indifferent_access'
+
 require 'rest_in_peace/definition_proxy'
 
 module RESTinPeace
 
   def self.included(base)
     base.send :extend, ClassMethods
+    base.send :include, ActiveModel::Dirty
   end
 
   def api
@@ -16,14 +19,26 @@ module RESTinPeace
 
   def hash_for_updates
     hash_representation = { id: id }
-    self.class.rip_attributes[:write].map do |key|
+    changed.each do |key|
       value = send(key)
-      hash_representation[key] = hash_representation_of_object(value)
+      hash_representation[key.to_sym] = hash_representation_of_object(value)
     end
     if self.class.rip_namespace
       { id: id, self.class.rip_namespace => hash_representation }
     else
       hash_representation
+    end
+  end
+
+  def clear_changes
+    case
+    when respond_to?(:clear_changes_information) # ActiveModel >= 4.2
+      clear_changes_information
+    when respond_to?(:reset_changes) # ActiveModel >= 4.0 && <= 4.1
+      reset_changes
+    else # ActiveModel <= 3.2
+      return unless @changed_attributes
+      @changed_attributes.clear
     end
   end
 
@@ -51,6 +66,7 @@ module RESTinPeace
         instance_variable_set("@#{key}", value)
       end
     end
+    clear_changes
   end
 
   def hash_representation_of_object(object)

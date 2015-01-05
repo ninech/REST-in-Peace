@@ -9,7 +9,7 @@ describe RESTinPeace do
       rest_in_peace do
         attributes do
           read :id, :name, :relation
-          write :my_array, :my_hash, :array_with_hash, :overridden_attribute
+          write :my_array, :my_hash, :array_with_hash, :overridden_attribute, :description
         end
       end
 
@@ -31,6 +31,7 @@ describe RESTinPeace do
   let(:my_hash) { { element1: 'yolo' } }
   let(:array_with_hash) { [my_hash.dup] }
   let(:overridden_attribute) { 'initial value' }
+  let(:description) { 'old description' }
   let(:attributes) do
     {
       id: 1,
@@ -40,6 +41,7 @@ describe RESTinPeace do
       my_hash: my_hash,
       array_with_hash: array_with_hash,
       overridden_attribute: overridden_attribute,
+      description: description,
     }
   end
   let(:instance) { extended_class.new(attributes) }
@@ -75,8 +77,8 @@ describe RESTinPeace do
     specify { expect(extended_class).to respond_to(:rip_attributes) }
     specify do
       expect(extended_class.rip_attributes).to eq(
-        read: [:id, :name, :relation, :my_array, :my_hash, :array_with_hash, :overridden_attribute],
-        write: [:my_array, :my_hash, :array_with_hash, :overridden_attribute])
+        read: [:id, :name, :relation, :my_array, :my_hash, :array_with_hash, :overridden_attribute, :description],
+        write: [:my_array, :my_hash, :array_with_hash, :overridden_attribute, :description])
     end
   end
 
@@ -110,6 +112,9 @@ describe RESTinPeace do
       end
 
       context 'overridden getter' do
+        before do
+          subject.overridden_attribute = 'new value'
+        end
         specify { expect(subject.hash_for_updates).to include(overridden_attribute: 'something else') }
       end
 
@@ -119,13 +124,22 @@ describe RESTinPeace do
       end
 
       context 'hash' do
-        specify { expect(subject.hash_for_updates[:my_hash]).to eq(element1: 'yolo') }
+        before do
+          subject.my_hash = { element1: 'swag' }
+        end
+
+        specify { expect(subject.hash_for_updates[:my_hash]).to eq(element1: 'swag') }
       end
 
       context 'with objects assigned' do
-        let(:my_hash) { double('OtherClass') }
+        let(:new_hash) { double('OtherClass') }
+
+        before do
+          subject.my_hash = new_hash
+        end
+
         it 'deeply calls hash_for_updates' do
-          expect(my_hash).to receive(:hash_for_updates).and_return({})
+          expect(new_hash).to receive(:hash_for_updates).and_return({})
           subject.hash_for_updates
         end
       end
@@ -139,7 +153,7 @@ describe RESTinPeace do
           rest_in_peace do
             attributes do
               read :id
-              write :name
+              write :name, :description
             end
 
             namespace_attributes_with :blubb
@@ -147,7 +161,11 @@ describe RESTinPeace do
         end
       end
 
-      specify { expect(subject.hash_for_updates).to eq(id: 1, blubb: { id: 1, name: 'test' }) }
+      before do
+        subject.name = 'new value'
+      end
+
+      specify { expect(subject.hash_for_updates).to eq(id: 1, blubb: { id: 1, name: 'new value' }) }
     end
   end
 
@@ -202,6 +220,29 @@ describe RESTinPeace do
     specify do
       expect { subject.update_attributes(new_attributes) }.
         to_not change(instance, :name).from(attributes[:name])
+    end
+  end
+
+  describe '#changed?' do
+    subject { instance }
+
+    context 'a new instance' do
+      it { is_expected.to_not be_changed }
+    end
+
+    context 'a modified instance' do
+      before do
+        instance.description = 'new value'
+      end
+      it { is_expected.to be_changed }
+    end
+
+    context 'a saved instance' do
+      before do
+        instance.description = 'new value'
+        instance.clear_changes
+      end
+      it { is_expected.to_not be_changed }
     end
   end
 end

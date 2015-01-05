@@ -99,27 +99,6 @@ describe RESTinPeace do
       allow(api_double).to receive(:post).and_return(response)
     end
 
-    describe '#changed?' do
-      context 'a new instance' do
-        specify { expect(instance.changed?).to eq(false) }
-      end
-
-      context 'a modified instance' do
-        before do
-          instance.description = 'new value'
-        end
-        specify { expect(instance.changed?).to eq(true) }
-      end
-
-      context 'a saved instance' do
-        before do
-          instance.description = 'new value'
-          instance.save
-        end
-        specify { expect(instance.changed?).to eq(false) }
-      end
-    end
-
     describe 'attribute methods' do
       specify { expect(instance).to respond_to(:description_changed?) }
       specify { expect(instance).to respond_to(:title_changed?) }
