@@ -31,7 +31,8 @@ module RESTinPeace
   end
 
   def clear_changes
-    @changed_attributes.clear if @changed_attributes
+    return unless @changed_attributes
+    @changed_attributes.clear
   end
 
   def update_attributes(attributes)
