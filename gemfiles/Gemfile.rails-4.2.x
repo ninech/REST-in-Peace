@@ -1,5 +1,5 @@
 source 'https://rubygems.org'
 
-gemspec
+gemspec path: '../rest-in-peace.gemspec'
 
 gem 'rails', '~> 4.2.0'
