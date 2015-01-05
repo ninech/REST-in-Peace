@@ -224,15 +224,17 @@ describe RESTinPeace do
   end
 
   describe '#changed?' do
+    subject { instance }
+
     context 'a new instance' do
-      specify { expect(instance.changed?).to eq(false) }
+      it { is_expected.to_not be_changed }
     end
 
     context 'a modified instance' do
       before do
         instance.description = 'new value'
       end
-      specify { expect(instance.changed?).to eq(true) }
+      it { is_expected.to be_changed }
     end
 
     context 'a saved instance' do
@@ -240,7 +242,7 @@ describe RESTinPeace do
         instance.description = 'new value'
         instance.clear_changes
       end
-      specify { expect(instance.changed?).to eq(false) }
+      it { is_expected.to_not be_changed }
     end
   end
 end
