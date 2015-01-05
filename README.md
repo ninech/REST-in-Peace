@@ -36,6 +36,8 @@ rest_in_peace do
 end
 ```
 
+**There must be at least an attribute called `id` to allow REST-in-Peace to work properly.** 
+
 #### API Endpoints
 
 You need to define all the API endpoints you want to consume with `RESTinPeace`. Currently the four HTTP verbs `GET`, `POST`, `PATCH` and `DELETE` are supported.
