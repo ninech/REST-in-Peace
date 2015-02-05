@@ -8,7 +8,7 @@ module RESTinPeace
       def get(method_name, url_template, default_params = {})
         @target.rip_registry[:resource] << { method: :get, name: method_name, url: url_template }
         @target.send(:define_method, method_name) do
-          call = RESTinPeace::ApiCall.new(api, url_template, self, hash_for_updates)
+          call = RESTinPeace::ApiCall.new(api, url_template, self, payload)
           call.get
         end
       end
@@ -16,7 +16,7 @@ module RESTinPeace
       def patch(method_name, url_template)
         @target.rip_registry[:resource] << { method: :patch, name: method_name, url: url_template }
         @target.send(:define_method, method_name) do
-          call = RESTinPeace::ApiCall.new(api, url_template, self, hash_for_updates)
+          call = RESTinPeace::ApiCall.new(api, url_template, self, payload)
           call.patch
         end
       end
@@ -24,7 +24,7 @@ module RESTinPeace
       def post(method_name, url_template)
         @target.rip_registry[:resource] << { method: :post, name: method_name, url: url_template }
         @target.send(:define_method, method_name) do
-          call = RESTinPeace::ApiCall.new(api, url_template, self, hash_for_updates)
+          call = RESTinPeace::ApiCall.new(api, url_template, self, payload)
           call.post
         end
       end
@@ -32,7 +32,7 @@ module RESTinPeace
       def put(method_name, url_template)
         @target.rip_registry[:resource] << { method: :put, name: method_name, url: url_template }
         @target.send(:define_method, method_name) do
-          call = RESTinPeace::ApiCall.new(api, url_template, self, hash_for_updates)
+          call = RESTinPeace::ApiCall.new(api, url_template, self, payload)
           call.put
         end
       end

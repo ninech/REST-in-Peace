@@ -26,12 +26,14 @@ describe RESTinPeace::ResponseConverter do
       specify { expect(subject).to be_instance_of(Array) }
       specify { expect(subject.first).to be_instance_of(extended_class) }
       specify { expect(subject.map(&:name)).to eq(%w(test1 test2)) }
+      specify { expect(subject.first).to_not be_changed }
     end
 
     shared_examples_for 'a hash input' do
       let(:response_body) { element1 }
       specify { expect(subject).to be_instance_of(extended_class) }
       specify { expect(subject.name).to eq('test1') }
+      it { is_expected.to_not be_changed }
     end
 
     shared_examples_for 'a string input' do

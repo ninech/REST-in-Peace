@@ -41,7 +41,7 @@ describe RESTinPeace::DefinitionProxy::ResourceMethodDefinitions do
     describe 'parameter and arguments handling' do
       it 'uses the attributes of the class' do
         expect(RESTinPeace::ApiCall).to receive(:new).
-          with(target.api, url_template, instance, instance.hash_for_updates).
+          with(target.api, url_template, instance, instance.payload).
           and_return(api_call_double)
 
         subject.send(http_verb, method_name, url_template)

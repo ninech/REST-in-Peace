@@ -14,10 +14,10 @@ module RESTinPeace
   end
 
   def initialize(attributes = {})
-    force_attributes_from_hash(attributes)
+    set_attributes attributes
   end
 
-  def hash_for_updates
+  def payload
     hash_representation = { id: id }
     changed.each do |key|
       value = send(key)
@@ -57,7 +57,7 @@ module RESTinPeace
     hash_representation
   end
 
-  def force_attributes_from_hash(attributes)
+  def set_attributes(attributes)
     attributes.each do |key, value|
       next unless respond_to?(key)
       if respond_to?("#{key}=")
@@ -66,11 +66,15 @@ module RESTinPeace
         instance_variable_set("@#{key}", value)
       end
     end
+  end
+
+  def force_attributes_from_hash(attributes)
+    set_attributes attributes
     clear_changes
   end
 
   def hash_representation_of_object(object)
-    return object.hash_for_updates if object.respond_to?(:hash_for_updates)
+    return object.payload if object.respond_to?(:payload)
     return object.map { |element| hash_representation_of_object(element) } if object.is_a?(Array)
     object
   end

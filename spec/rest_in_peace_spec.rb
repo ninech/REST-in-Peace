@@ -102,25 +102,25 @@ describe RESTinPeace do
     specify { expect(subject).to eq(attributes.merge(overridden_attribute: 'something else')) }
   end
 
-  describe '#hash_for_updates' do
+  describe '#payload' do
     subject { instance }
-    specify { expect(subject).to respond_to(:hash_for_updates).with(0).arguments }
+    specify { expect(subject).to respond_to(:payload).with(0).arguments }
 
     context 'without a namspace defined' do
       it 'adds id by default' do
-        expect(subject.hash_for_updates).to include(id: 1)
+        expect(subject.payload).to include(id: 1)
       end
 
       context 'overridden getter' do
         before do
           subject.overridden_attribute = 'new value'
         end
-        specify { expect(subject.hash_for_updates).to include(overridden_attribute: 'something else') }
+        specify { expect(subject.payload).to include(overridden_attribute: 'something else') }
       end
 
       context 'self defined methods' do
         specify { expect(subject).to respond_to(:self_defined_method) }
-        specify { expect(subject.hash_for_updates).to_not include(:self_defined_method) }
+        specify { expect(subject.payload).to_not include(:self_defined_method) }
       end
 
       context 'hash' do
@@ -128,7 +128,7 @@ describe RESTinPeace do
           subject.my_hash = { element1: 'swag' }
         end
 
-        specify { expect(subject.hash_for_updates[:my_hash]).to eq(element1: 'swag') }
+        specify { expect(subject.payload[:my_hash]).to eq(element1: 'swag') }
       end
 
       context 'with objects assigned' do
@@ -138,14 +138,14 @@ describe RESTinPeace do
           subject.my_hash = new_hash
         end
 
-        it 'deeply calls hash_for_updates' do
-          expect(new_hash).to receive(:hash_for_updates).and_return({})
-          subject.hash_for_updates
+        it 'deeply calls payload' do
+          expect(new_hash).to receive(:payload).and_return({})
+          subject.payload
         end
       end
     end
 
-    context 'with a namspace defined' do
+    context 'with a namespace defined' do
       let(:extended_class) do
         Class.new do
           include RESTinPeace
@@ -165,7 +165,7 @@ describe RESTinPeace do
         subject.name = 'new value'
       end
 
-      specify { expect(subject.hash_for_updates).to eq(id: 1, blubb: { id: 1, name: 'new value' }) }
+      specify { expect(subject.payload).to eq(id: 1, blubb: { id: 1, name: 'new value', description: 'old description' }) }
     end
   end
 
@@ -227,7 +227,7 @@ describe RESTinPeace do
     subject { instance }
 
     context 'a new instance' do
-      it { is_expected.to_not be_changed }
+      it { is_expected.to be_changed }
     end
 
     context 'a modified instance' do
