@@ -8,6 +8,7 @@ module RESTinPeace
       @url_template = url_template
       @klass = klass
       @params = params
+      @attributes = {}
     end
 
     def get
@@ -43,8 +44,12 @@ module RESTinPeace
       sanitizer.leftover_params
     end
 
+    def attributes
+      @attributes = @klass.to_h if @klass.respond_to?(:to_h)
+    end
+
     def sanitizer
-      @sanitizer ||= RESTinPeace::TemplateSanitizer.new(@url_template, @params)
+      @sanitizer ||= RESTinPeace::TemplateSanitizer.new(@url_template, @params, attributes)
     end
 
     def convert_response(response)

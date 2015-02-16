@@ -1,8 +1,8 @@
 require 'rest_in_peace/template_sanitizer'
 
 describe RESTinPeace::TemplateSanitizer do
-
-  let(:template_sanitizer) { RESTinPeace::TemplateSanitizer.new(url_template, params) }
+  let(:template_sanitizer) { RESTinPeace::TemplateSanitizer.new(url_template, params, attributes) }
+  let(:attributes) { {} }
 
   describe '#url' do
     subject { template_sanitizer.url }
@@ -47,6 +47,20 @@ describe RESTinPeace::TemplateSanitizer do
       let(:params) { { id: 1 } }
       let(:url_template) { '/a/:id' }
       specify { expect { subject }.to_not change { params } }
+    end
+
+    context 'tokens from attributes' do
+      let(:params) { { id: 1 } }
+      let(:attributes) { { a_id: 2 } }
+      let(:url_template) { '/a/:a_id/b/:id' }
+      specify { expect(subject).to eq('/a/2/b/1') }
+    end
+
+    context 'incomplete params and attributes' do
+      let(:params) { { id: 1 } }
+      let(:attributes) { {} }
+      let(:url_template) { '/a/:a_id/b/:id' }
+      specify { expect { subject }.to raise_error(RESTinPeace::TemplateSanitizer::IncompleteParams) }
     end
   end
 
