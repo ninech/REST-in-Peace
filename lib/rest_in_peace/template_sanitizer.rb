@@ -5,9 +5,10 @@ module RESTinPeace
 
     class IncompleteParams < RESTinPeace::DefaultError; end
 
-    def initialize(url_template, params)
+    def initialize(url_template, params, attributes)
       @url_template = url_template
       @params = params.dup
+      @attributes = attributes
       @url = nil
     end
 
@@ -16,6 +17,7 @@ module RESTinPeace
       @url = @url_template.dup
       tokens.each do |token|
         param = @params.delete(token.to_sym)
+        param ||= @attributes[token.to_sym]
         raise IncompleteParams, "Unknown parameter for token :#{token} found" unless param
         @url.sub!(%r{:#{token}}, param.to_s)
       end
