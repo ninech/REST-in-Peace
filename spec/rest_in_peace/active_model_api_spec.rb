@@ -124,7 +124,7 @@ describe RESTinPeace do
         let(:response) { OpenStruct.new(body: { name: 'new name from api' }) }
 
         specify { expect { instance.save }.to_not raise_error }
-        specify { expect(instance.save.object_id).to eq(instance.object_id) }
+        specify { expect(instance.save).to eq(true) }
         specify { expect { instance.save }.to change(instance, :name) }
       end
 
@@ -137,6 +137,7 @@ describe RESTinPeace do
         specify { expect { instance.save }.to change { instance.errors.any? } }
         specify { expect { instance.save }.to_not change { instance.description } }
         specify { expect { instance.save }.to_not change { instance.name } }
+        specify { expect(instance.save).to eq(false) }
       end
     end
 
@@ -145,7 +146,7 @@ describe RESTinPeace do
         let(:response) { OpenStruct.new(body: { name: 'new name from api' }) }
 
         specify { expect { instance.create }.to_not raise_error }
-        specify { expect(instance.create.object_id).to eq(instance.object_id) }
+        specify { expect(instance.create).to eq(true) }
         specify { expect { instance.create }.to change(instance, :name) }
       end
 
@@ -158,11 +159,13 @@ describe RESTinPeace do
         specify { expect { instance.create }.to change { instance.errors.any? } }
         specify { expect { instance.create }.to_not change { instance.description } }
         specify { expect { instance.create }.to_not change { instance.name } }
+        specify { expect(instance.save).to eq(false) }
       end
     end
 
     describe 'validation handling' do
       let(:description) { 'desc' }
+      let(:errors) { { description: ['must not be empty'] } }
 
       specify { expect(instance).to respond_to(:read_attribute_for_validation).with(1).argument }
       specify { expect(instance.read_attribute_for_validation(:description)).to eq('desc') }
@@ -172,8 +175,21 @@ describe RESTinPeace do
       end
 
       describe '#errors=' do
-        let(:errors) { { description: ['must not be empty'] } }
         specify { expect { instance.errors = errors }.to change { instance.errors.count } }
+      end
+
+      describe '#valid?' do
+        context 'without errors' do
+          specify { expect(instance.valid?).to eq(true) }
+        end
+
+        context 'with errors' do
+          before do
+            instance.errors = errors
+          end
+
+          specify { expect(instance.valid?).to eq(false) }
+        end
       end
     end
   end
