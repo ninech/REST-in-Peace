@@ -36,12 +36,16 @@ module RESTinPeace
     end
 
     def save_with_dirty_tracking
-      save_without_dirty_tracking
+      save_without_dirty_tracking.tap do
+        clear_changes if valid?
+      end
       valid?
     end
 
     def create_with_dirty_tracking
-      create_without_dirty_tracking
+      create_without_dirty_tracking.tap do
+        clear_changes if valid?
+      end
       valid?
     end
 
