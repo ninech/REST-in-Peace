@@ -18,6 +18,8 @@ module RESTinPeace
 
       base.send(:alias_method, :save_without_dirty_tracking, :save)
       base.send(:alias_method, :save, :save_with_dirty_tracking)
+      base.send(:alias_method, :create_without_dirty_tracking, :create)
+      base.send(:alias_method, :create, :create_with_dirty_tracking)
 
       def base.human_attribute_name(attr, options = {})
         attr.to_s
@@ -34,9 +36,17 @@ module RESTinPeace
     end
 
     def save_with_dirty_tracking
-      save_without_dirty_tracking.tap do
-        clear_changes
-      end
+      save_without_dirty_tracking
+      valid?
+    end
+
+    def create_with_dirty_tracking
+      create_without_dirty_tracking
+      valid?
+    end
+
+    def valid?
+      !errors.any?
     end
 
     def persisted?
