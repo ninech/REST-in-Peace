@@ -44,12 +44,8 @@ module RESTinPeace
       sanitizer.leftover_params
     end
 
-    def attributes
-      @attributes = @klass.to_h if @klass.respond_to?(:to_h)
-    end
-
     def sanitizer
-      @sanitizer ||= RESTinPeace::TemplateSanitizer.new(@url_template, @params, attributes)
+      @sanitizer ||= RESTinPeace::TemplateSanitizer.new(@url_template, @params, @klass)
     end
 
     def convert_response(response)
