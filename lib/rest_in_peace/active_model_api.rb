@@ -15,15 +15,12 @@ module RESTinPeace
 
       base.send(:include, ActiveModel::Conversion)
       base.extend ActiveModel::Naming
+      base.extend ActiveModel::Translation
 
       base.send(:alias_method, :save_without_dirty_tracking, :save)
       base.send(:alias_method, :save, :save_with_dirty_tracking)
       base.send(:alias_method, :create_without_dirty_tracking, :create)
       base.send(:alias_method, :create, :create_with_dirty_tracking)
-
-      def base.human_attribute_name(attr, options = {})
-        attr.to_s
-      end
 
       def base.lookup_ancestors
         [self]

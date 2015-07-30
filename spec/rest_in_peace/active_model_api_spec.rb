@@ -84,8 +84,13 @@ describe RESTinPeace do
     end
 
     describe 'validation handling' do
+      before do
+        def extended_class.model_name
+          ActiveModel::Name.new(self, nil, 'TemporaryClassForTests')
+        end
+      end
       specify { expect(extended_class).to respond_to(:human_attribute_name).with(2).arguments }
-      specify { expect(extended_class.human_attribute_name(:description)).to eq('description') }
+      specify { expect(extended_class.human_attribute_name(:description)).to eq('Description') }
 
       specify { expect(extended_class).to respond_to(:lookup_ancestors).with(0).arguments }
       specify { expect(extended_class.lookup_ancestors).to eq([extended_class]) }
@@ -164,6 +169,12 @@ describe RESTinPeace do
     end
 
     describe 'validation handling' do
+      before do
+        def extended_class.model_name
+          ActiveModel::Name.new(self, nil, 'TemporaryClassForTests')
+        end
+      end
+
       let(:description) { 'desc' }
       let(:errors) { { description: ['must not be empty'] } }
 
