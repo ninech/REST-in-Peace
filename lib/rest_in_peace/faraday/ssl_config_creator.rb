@@ -3,7 +3,7 @@ require 'openssl'
 module RESTinPeace
   module Faraday
     class SSLConfigCreator
-      class MissingParam < Exception; end
+      class MissingParam < StandardError; end
 
       def initialize(config, verify = :peer)
         @config = config
