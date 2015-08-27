@@ -15,7 +15,7 @@ module MyClient
 
           # Only make a request to get the next page if we have not
           # reached the last page yet.
-          raise StopIteration if current_page == total_pages
+          raise StopIteration if current_page >= total_pages
           @params.merge!(page: current_page + 1)
           result = api.get(url, @params)
           current_page = result.env.response_headers['X-Page'].to_i
