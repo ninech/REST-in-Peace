@@ -18,7 +18,7 @@ module RESTinPeace
       tokens.each do |token|
         param = @params.delete(token.to_sym)
         param ||= @klass.send(token) if @klass.respond_to?(token)
-        raise IncompleteParams, "Unknown parameter for token :#{token} found" unless param
+        raise IncompleteParams, "No parameter for token :#{token} found" unless param
         @url.sub!(%r{:#{token}}, param.to_s)
       end
       @url
