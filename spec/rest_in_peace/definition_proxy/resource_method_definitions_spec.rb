@@ -37,7 +37,20 @@ describe RESTinPeace::DefinitionProxy::ResourceMethodDefinitions do
     end
   end
 
-  shared_examples_for 'an instance method with parameters' do
+  shared_examples_for 'an instance method with all attributes' do
+    describe 'parameter and arguments handling' do
+      it 'uses all the attributes of the class' do
+        expect(RESTinPeace::ApiCall).to receive(:new).
+          with(target.api, url_template, instance, instance.payload(false)).
+          and_return(api_call_double)
+
+        subject.send(http_verb, method_name, url_template)
+        instance.send(method_name)
+      end
+    end
+  end
+
+  shared_examples_for 'an instance method with changed attributes' do
     describe 'parameter and arguments handling' do
       it 'uses the attributes of the class' do
         expect(RESTinPeace::ApiCall).to receive(:new).
@@ -50,7 +63,7 @@ describe RESTinPeace::DefinitionProxy::ResourceMethodDefinitions do
     end
   end
 
-  shared_examples_for 'an instance method without parameters' do
+  shared_examples_for 'an instance method without attributes' do
     describe 'parameter and arguments handling' do
       it 'provides the id only' do
         expect(RESTinPeace::ApiCall).to receive(:new).
@@ -71,7 +84,7 @@ describe RESTinPeace::DefinitionProxy::ResourceMethodDefinitions do
     end
 
     describe 'the created method' do
-      it_behaves_like 'an instance method with parameters' do
+      it_behaves_like 'an instance method with changed attributes' do
         let(:http_verb) { :get }
         let(:method_name) { :reload }
         let(:url_template) { '/a/:id' }
@@ -87,7 +100,7 @@ describe RESTinPeace::DefinitionProxy::ResourceMethodDefinitions do
     end
 
     describe 'the created method' do
-      it_behaves_like 'an instance method with parameters' do
+      it_behaves_like 'an instance method with changed attributes' do
         let(:http_verb) { :patch }
         let(:method_name) { :save }
         let(:url_template) { '/a/:id' }
@@ -103,7 +116,7 @@ describe RESTinPeace::DefinitionProxy::ResourceMethodDefinitions do
     end
 
     describe 'the created method' do
-      it_behaves_like 'an instance method with parameters' do
+      it_behaves_like 'an instance method with all attributes' do
         let(:http_verb) { :post }
         let(:method_name) { :create }
         let(:url_template) { '/a/:id' }
@@ -119,7 +132,7 @@ describe RESTinPeace::DefinitionProxy::ResourceMethodDefinitions do
     end
 
     describe 'the created method' do
-      it_behaves_like 'an instance method with parameters' do
+      it_behaves_like 'an instance method with all attributes' do
         let(:http_verb) { :put }
         let(:method_name) { :update }
         let(:url_template) { '/a/:id' }
@@ -135,7 +148,7 @@ describe RESTinPeace::DefinitionProxy::ResourceMethodDefinitions do
     end
 
     describe 'the created method' do
-      it_behaves_like 'an instance method without parameters' do
+      it_behaves_like 'an instance method without attributes' do
         let(:http_verb) { :delete }
         let(:method_name) { :destroy }
         let(:url_template) { '/a/:id' }

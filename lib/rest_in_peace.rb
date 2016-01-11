@@ -17,11 +17,15 @@ module RESTinPeace
     set_attributes attributes
   end
 
-  def payload
+  def payload(changes_only = true)
     hash_representation = { id: id }
-    changed.each do |key|
-      value = send(key)
-      hash_representation[key.to_sym] = hash_representation_of_object(value)
+    if changes_only
+      changed.each do |key|
+        value = send(key)
+        hash_representation[key.to_sym] = hash_representation_of_object(value)
+      end
+    else
+      hash_representation = to_h
     end
     if self.class.rip_namespace
       { id: id, self.class.rip_namespace => hash_representation }
