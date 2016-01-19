@@ -11,3 +11,4 @@ gemfile:
   - gemfiles/Gemfile.rails-4.2.x
 script:
   - bundle exec rake spec
+before_install: gem install bundler
