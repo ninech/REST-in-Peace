@@ -97,8 +97,6 @@ resource.create # calls "POST /rip"
 resource.reload # calls "GET /rip/1"
 ```
 
-**For any writing action (`:post`, `:put`, `:patch`) RESTinPeace will include the *changed* attributes in the body and `id`.**
-
 #### Collection
 
 If you define anything inside the `collection` block, it will define a method on the class:
@@ -118,6 +116,19 @@ end
 resource = Resource.find(id: 1) # calls "GET /rip/1"
 resource = Resource.find_on_other(other_id: 42, id: 1337) # calls "GET /other/42/rip/1337"
 ```
+
+#### HTTP Verb differences
+
+Depending on the given HTTP verb, a different set of attributes will be used as payload and query parameters.
+
+HTTP Verb           | passed | all | only changed and id | only id
+------------------- | :----: | :-: | :-----------------: | :-----:
+`GET` on collection | ✔      | ✘   | ✘                   | ✘
+`GET` on resource   | ✘      | ✔   | ✘                   | ✘
+`POST`              | ✘      | ✔   | ✘                   | ✘
+`PUT`               | ✘      | ✔   | ✘                   | ✘
+`PATCH`             | ✘      | ✘   | ✔                   | ✘
+`DELETE`            | ✘      | ✘   | ✘                   | ✔
 
 #### Pagination
 
