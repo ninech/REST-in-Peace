@@ -117,6 +117,14 @@ describe RESTinPeace::TemplateSanitizer do
         let(:url_template) { '/a/:a_id/b/:id' }
         specify { expect { subject }.to raise_error(RESTinPeace::TemplateSanitizer::IncompleteParams) }
       end
+
+      context 'param which need to be encoded' do
+        let(:params) { { id: 'this param need to be encoded' } }
+        let(:encoded_param) { 'this+param+need+to+be+encoded' }
+        let(:attributes) { { a_id: 2 } }
+        let(:url_template) { '/a/:a_id/b/:id' }
+        specify { expect(subject).to eq("/a/2/b/#{encoded_param}") }
+      end
     end
 
     describe '#tokens' do
@@ -141,6 +149,16 @@ describe RESTinPeace::TemplateSanitizer do
       subject { template_sanitizer.leftover_params }
 
       specify { expect(subject).to eq({name: 'test'}) }
+    end
+
+    describe '#encode_uri' do
+      let(:params) { { id: 1, name: 'test' } }
+      let(:url_template) { '/a/:id' }
+      let(:raw_string) { 'it is a raw string@meta' }
+      let(:encoded_string) { 'it+is+a+raw+string%40meta' }
+      subject { template_sanitizer.encode_uri(raw_string) }
+
+      specify { expect(subject).to eq encoded_string }
     end
   end
 end
