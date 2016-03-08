@@ -19,7 +19,7 @@ module RESTinPeace
         param = @params.delete(token.to_sym)
         param ||= @klass.send(token) if @klass.respond_to?(token)
         raise IncompleteParams, "No parameter for token :#{token} found" unless param
-        @url.sub!(%r{:#{token}}, encode_uri(param.to_s))
+        @url.sub!(%r{:#{token}}, CGI.escape(param.to_s))
       end
       @url
     end
@@ -30,11 +30,6 @@ module RESTinPeace
 
     def leftover_params
       @params.delete_if { |param| tokens.include?(param.to_s) }
-    end
-
-    def encode_uri(param)
-      return if param.nil?
-      CGI.escape param
     end
   end
 end
