@@ -139,7 +139,7 @@ describe RESTinPeace::TemplateSanitizer do
         let(:encoded_param) { '' }
         let(:attributes) { { a_id: 2 } }
         let(:url_template) { '/a/:a_id/b/:id' }
-        specify { expect{ subject }.to raise_exception(RESTinPeace::TemplateSanitizer::IncompleteParams) }
+        specify { expect { subject }.to raise_exception(RESTinPeace::TemplateSanitizer::IncompleteParams) }
       end
     end
 
