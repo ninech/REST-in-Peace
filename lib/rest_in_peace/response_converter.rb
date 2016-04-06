@@ -23,16 +23,16 @@ module RESTinPeace
 
     def result
       case body.class.to_s
-        when 'Array'
-          convert_from_array
-        when 'Hash'
-          convert_from_hash
-        when 'String'
-          body
-        when 'NilClass'
-          { body: body, status: status }
-        else
-          raise UnknownConvertStrategy, body.class
+      when 'Array'
+        convert_from_array
+      when 'Hash'
+        convert_from_hash
+      when 'String'
+        body
+      when 'NilClass'
+        { body: body, status: status }
+      else
+        raise UnknownConvertStrategy, body.class
       end
     end
 
