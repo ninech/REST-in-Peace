@@ -5,7 +5,8 @@ require 'ostruct'
 describe RESTinPeace::ResponseConverter do
   let(:element1) { { name: 'test1' } }
   let(:element2) { { name: 'test2' } }
-  let(:response) { OpenStruct.new(body: response_body) }
+  let(:status) { 200 }
+  let(:response) { OpenStruct.new(body: response_body, status: status) }
   let(:converter) { RESTinPeace::ResponseConverter.new(response, klass) }
   let(:extended_class) do
     Class.new do
@@ -42,6 +43,13 @@ describe RESTinPeace::ResponseConverter do
       specify { expect(subject).to eq('yolo binary stuff') }
     end
 
+    shared_examples_for 'a nil object input' do
+      let(:response_body) { nil }
+      let(:status) { 204 }
+      specify { expect(subject).to be_instance_of(Hash) }
+      specify { expect(subject).to eq(body: nil, status: 204) }
+    end
+
     shared_examples_for 'an unknown input do' do
       let(:response_body) { Object }
       specify { expect { subject }.to raise_error(RESTinPeace::ResponseConverter::UnknownConvertStrategy) }
@@ -60,6 +68,10 @@ describe RESTinPeace::ResponseConverter do
       context 'input is a string' do
         it_behaves_like 'a string input'
       end
+
+      context 'input is a Nil object' do
+        it_behaves_like 'a nil object input'
+      end
     end
 
     context 'given type is an instance' do
@@ -74,6 +86,10 @@ describe RESTinPeace::ResponseConverter do
 
       context 'input is a string' do
         it_behaves_like 'a string input'
+      end
+
+      context 'input is a Nil object' do
+        it_behaves_like 'a nil object input'
       end
     end
   end

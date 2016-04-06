@@ -6,10 +6,11 @@ module RESTinPeace
       end
     end
 
-    attr_accessor :body, :klass, :existing_instance
+    attr_accessor :body, :status, :klass, :existing_instance
 
     def initialize(response, instance_or_class)
       self.body = response.body
+      self.status = response.status
 
       if instance_or_class.respond_to?(:new)
         self.klass = instance_or_class
@@ -28,6 +29,8 @@ module RESTinPeace
         convert_from_hash
       when 'String'
         body
+      when 'NilClass'
+        { body: body, status: status }
       else
         raise UnknownConvertStrategy, body.class
       end
