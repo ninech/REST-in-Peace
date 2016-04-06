@@ -30,7 +30,7 @@ module RESTinPeace
       when 'String'
         body
       when 'NilClass'
-        { body: body, status: status }
+        nil
       else
         raise UnknownConvertStrategy, body.class
       end
