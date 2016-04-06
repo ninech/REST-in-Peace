@@ -47,7 +47,7 @@ describe RESTinPeace::ResponseConverter do
       let(:response_body) { nil }
       let(:status) { 204 }
       specify { expect(subject).to be_instance_of(Hash) }
-      specify { expect(subject).to eq({ body: nil, status: 204 }) }
+      specify { expect(subject).to eq(body: nil, status: 204) }
     end
 
     shared_examples_for 'an unknown input do' do
