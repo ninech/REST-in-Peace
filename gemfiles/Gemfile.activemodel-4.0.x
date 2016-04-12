@@ -2,4 +2,4 @@ source 'https://rubygems.org'
 
 gemspec path: '../'
 
-gem 'rails', '~> 4.1.0'
+gem 'activemodel', '~> 4.0.0'
