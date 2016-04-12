@@ -5,10 +5,10 @@ rvm:
   - 2.0.0
   - 2.1.2
 gemfile:
-  - gemfiles/Gemfile.rails-3.2.x
-  - gemfiles/Gemfile.rails-4.0.x
-  - gemfiles/Gemfile.rails-4.1.x
-  - gemfiles/Gemfile.rails-4.2.x
+  - gemfiles/Gemfile.activemodel-3.2.x
+  - gemfiles/Gemfile.activemodel-4.0.x
+  - gemfiles/Gemfile.activemodel-4.1.x
+  - gemfiles/Gemfile.activemodel-4.2.x
 script:
   - bundle exec rake spec
 before_install: gem install bundler
