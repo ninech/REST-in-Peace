@@ -18,6 +18,25 @@ describe RESTinPeace::ResponseConverter do
     end
   end
 
+  let(:extended_class_with_active_model_support) do
+    Class.new do
+      include RESTinPeace
+
+      rest_in_peace do
+        attributes do
+          read :name
+        end
+
+        resource do
+          post :create, '/test'
+          patch :save, '/test/:id'
+        end
+
+        acts_as_active_model
+      end
+    end
+  end
+
   describe '#result' do
     subject { converter.result }
 
@@ -51,6 +70,27 @@ describe RESTinPeace::ResponseConverter do
     shared_examples_for 'an unknown input do' do
       let(:response_body) { Object }
       specify { expect { subject }.to raise_error(RESTinPeace::ResponseConverter::UnknownConvertStrategy) }
+    end
+
+    describe 'hash input' do
+      context 'server returns a HTTP 422 error code' do
+        # Note: If we have a 422 in the code, it means we included the
+        # RESTinPeace::Faraday::RaiseErrorsMiddleware and thus that we are in a Rails app.
+        # We can therefore assume that activemodel support is active.
+        let(:klass)         { extended_class_with_active_model_support }
+        let(:response_body) { { 'status' => 422, 'message' => 'Resource not valid', name: '1234' } }
+
+        context 'with ActiveModel support' do
+          it 'assigns the error to the main instance' do
+            expect(subject.errors.any?).to be_truthy
+            expect(subject.errors[:base]).to match_array('Resource not valid')
+          end
+
+          it 'does not add other attributes to the model' do
+            expect(subject.name).to be_blank
+          end
+        end
+      end
     end
 
     context 'given type is a class' do
