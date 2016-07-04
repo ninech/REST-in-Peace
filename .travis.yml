@@ -1,7 +1,6 @@
 language: ruby
 cache: bundler
 rvm:
-  - 1.9.3
   - 2.0.0
   - 2.1.2
   - 2.2.5
@@ -17,8 +16,6 @@ script:
 before_install: gem install bundler
 matrix:
   exclude:
-    - rvm: 1.9.3
-      gemfile: gemfiles/Gemfile.activemodel-5.0.x
     - rvm: 2.0.0
       gemfile: gemfiles/Gemfile.activemodel-5.0.x
     - rvm: 2.1.2
