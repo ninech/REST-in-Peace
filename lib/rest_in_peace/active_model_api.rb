@@ -64,7 +64,7 @@ module RESTinPeace
 
     def errors=(new_errors)
       new_errors.each do |key, value|
-        errors.set(key.to_sym, [value].flatten)
+        errors.add(key.to_sym, [value].flatten)
       end
     end
   end
