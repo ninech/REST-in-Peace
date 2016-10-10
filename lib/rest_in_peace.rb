@@ -25,8 +25,9 @@ module RESTinPeace
         hash_representation[key.to_sym] = hash_representation_of_object(value)
       end
     else
-      hash_representation = to_h
+      hash_representation.merge! to_h.keep_if { |key| write_attribute?(key) }
     end
+
     if self.class.rip_namespace
       { id: id, self.class.rip_namespace => hash_representation }
     else
@@ -81,6 +82,10 @@ module RESTinPeace
     return object.payload if object.respond_to?(:payload)
     return object.map { |element| hash_representation_of_object(element) } if object.is_a?(Array)
     object
+  end
+
+  def write_attribute?(attribute)
+    self.class.rip_attributes[:write].include?(attribute.to_sym)
   end
 
   module ClassMethods
