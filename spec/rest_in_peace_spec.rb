@@ -143,6 +143,32 @@ describe RESTinPeace do
           subject.payload
         end
       end
+
+      context 'all write attributes' do
+        specify do
+          expect(subject.payload(false)).to eq(
+            id: 1,
+            my_array: ['element'],
+            my_hash: { element1: 'yolo' },
+            array_with_hash: [{ element1: 'yolo' }],
+            overridden_attribute: 'something else',
+            description: 'old description'
+          )
+        end
+      end
+
+      context 'changes only' do
+        specify do
+          expect(subject.payload(true)).to eq(
+            id: 1,
+            my_array: ['element'],
+            my_hash: { element1: 'yolo' },
+            array_with_hash: [{ element1: 'yolo' }],
+            overridden_attribute: 'something else',
+            description: 'old description'
+          )
+        end
+      end
     end
 
     context 'with a namespace defined' do
@@ -152,7 +178,7 @@ describe RESTinPeace do
 
           rest_in_peace do
             attributes do
-              read :id
+              read :id, :relation
               write :name, :description
             end
 
