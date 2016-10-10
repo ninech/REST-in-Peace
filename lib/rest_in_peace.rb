@@ -25,7 +25,7 @@ module RESTinPeace
         hash_representation[key.to_sym] = hash_representation_of_object(value)
       end
     else
-      hash_representation.merge! to_h.reject { |k, _| !write_attribute?(k) }
+      hash_representation.merge! to_h.keep_if { |key| write_attribute?(key) }
     end
 
     if self.class.rip_namespace
