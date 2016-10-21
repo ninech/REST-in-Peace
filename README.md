@@ -255,3 +255,11 @@ Faraday.new do |faraday|
   # ...
 end
 ```
+
+## About
+
+This gem is currently maintained and funded by [nine.ch](https://nine.ch).
+
+[![nine.ch](https://blog.nine.ch/assets/logo.png)](https://nine.ch)
+
+We run your Linux server infrastructure – without interruptions, around the clock.
