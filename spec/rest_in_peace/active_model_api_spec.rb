@@ -176,7 +176,7 @@ describe RESTinPeace do
       end
 
       let(:description) { 'desc' }
-      let(:errors) { { description: ['must not be empty'] } }
+      let(:errors)      { { description: ['must not be empty'] } }
 
       specify { expect(instance).to respond_to(:read_attribute_for_validation).with(1).argument }
       specify { expect(instance.read_attribute_for_validation(:description)).to eq('desc') }
@@ -187,6 +187,12 @@ describe RESTinPeace do
 
       describe '#errors=' do
         specify { expect { instance.errors = errors }.to change { instance.errors.count } }
+
+        it 'correctly adds the error to the instance' do
+          instance.errors = errors
+
+          expect(instance.errors[:description]).to eq(['must not be empty'])
+        end
       end
 
       describe '#valid?' do
