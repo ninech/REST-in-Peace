@@ -3,7 +3,6 @@ require 'active_support/core_ext/hash/indifferent_access'
 require 'rest_in_peace/definition_proxy'
 
 module RESTinPeace
-
   def self.included(base)
     base.send :extend, ClassMethods
     base.send :include, ActiveModel::Dirty
