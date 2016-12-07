@@ -1,10 +1,11 @@
 require 'rest_in_peace'
 
 describe RESTinPeace do
-
   let(:extended_class) do
     Class.new do
       include RESTinPeace
+
+      attr_writer :relation
 
       rest_in_peace do
         attributes do
@@ -15,10 +16,6 @@ describe RESTinPeace do
 
       def overridden_attribute
         'something else'
-      end
-
-      def relation=(v)
-        @relation = v
       end
 
       def self_defined_method
