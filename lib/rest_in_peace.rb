@@ -24,7 +24,7 @@ module RESTinPeace
         hash_representation[key.to_sym] = hash_representation_of_object(value)
       end
     else
-      hash_representation.merge! to_h.keep_if { |key| write_attribute?(key) }
+      hash_representation.merge!(to_write_only_hash)
     end
 
     if self.class.rip_namespace
@@ -55,9 +55,11 @@ module RESTinPeace
 
   def to_h
     hash_representation = {}
+
     self.class.rip_attributes.values.flatten.each do |attr|
       hash_representation[attr] = send(attr)
     end
+
     hash_representation
   end
 
@@ -108,6 +110,14 @@ module RESTinPeace
         read: [],
         write: [],
       }
+    end
+  end
+
+  private
+
+  def to_write_only_hash
+    self.class.rip_attributes[:write].inject({}) do |h, attr|
+      h.merge(attr => send(attr))
     end
   end
 end
