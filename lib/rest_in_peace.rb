@@ -47,10 +47,13 @@ module RESTinPeace
   end
 
   def update_attributes(attributes)
-    attributes.each do |key, value|
-      next unless respond_to?("#{key}=")
-      send("#{key}=", value)
-    end
+    warn 'DEPRECATION WARNING: the method update_attributes is deprecated, use method update.'
+    update_record_attributes(attributes)
+  end
+
+  def update(attributes)
+    update_record_attributes(attributes)
+    self.save
   end
 
   def to_h
@@ -118,6 +121,13 @@ module RESTinPeace
   def to_write_only_hash
     self.class.rip_attributes[:write].inject({}) do |h, attr|
       h.merge(attr => send(attr))
+    end
+  end
+
+  def update_record_attributes(attributes)
+    attributes.each do |key, value|
+      next unless respond_to?("#{key}=")
+      send("#{key}=", value)
     end
   end
 end
