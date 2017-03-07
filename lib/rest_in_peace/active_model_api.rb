@@ -46,6 +46,11 @@ module RESTinPeace
       valid?
     end
 
+    def update(attributes)
+      update_attributes(attributes)
+      save
+    end
+
     def valid?
       !errors.any?
     end

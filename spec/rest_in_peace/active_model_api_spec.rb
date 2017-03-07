@@ -168,6 +168,27 @@ describe RESTinPeace do
       end
     end
 
+    describe '#update' do
+      let(:new_attributes) { { name: 'new_name', description: 'yoloswag' } }
+
+      subject { instance }
+
+      it 'saves record after update' do
+        expect(subject).to receive(:save)
+
+        subject.update(new_attributes)
+      end
+
+      specify do
+        expect { subject.update(new_attributes) }.
+          to change(instance, :description).from(attributes[:description]).to(new_attributes[:description])
+      end
+
+      specify do
+        expect { subject.update(new_attributes) }.to_not change(instance, :name).from(attributes[:name])
+      end
+    end
+
     describe 'validation handling' do
       before do
         def extended_class.model_name

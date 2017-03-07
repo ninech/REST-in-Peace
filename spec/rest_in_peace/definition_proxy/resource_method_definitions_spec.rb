@@ -127,14 +127,14 @@ describe RESTinPeace::DefinitionProxy::ResourceMethodDefinitions do
   context '#put' do
     it_behaves_like 'an instance method' do
       let(:http_verb) { :put }
-      let(:method_name) { :update_a }
+      let(:method_name) { :update }
       let(:url_template) { '/a/:id' }
     end
 
     describe 'the created method' do
       it_behaves_like 'an instance method with all attributes' do
         let(:http_verb) { :put }
-        let(:method_name) { :update_a}
+        let(:method_name) { :update }
         let(:url_template) { '/a/:id' }
       end
     end
