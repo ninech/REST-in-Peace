@@ -42,7 +42,14 @@ module RESTinPeace
     end
 
     def convert_from_hash(entity = body, instance = existing_instance)
-      instance.force_attributes_from_hash entity
+      entity_with_indifferent_access = entity.with_indifferent_access
+
+      # We received a validation error and we need to add it to the model.
+      if entity_with_indifferent_access[:status] == 422
+        instance.errors.add(:base, entity_with_indifferent_access[:message])
+      else
+        instance.force_attributes_from_hash entity
+      end
       instance
     end
 
