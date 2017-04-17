@@ -86,6 +86,12 @@ describe RESTinPeace::TemplateSanitizer do
         specify { expect(subject).to eq('/a/1/b/asd') }
       end
 
+      context 'token with white space' do
+        let(:params) { { name: 'Faruk Hossain' } }
+        let(:url_template) { '/a/:name' }
+        specify { expect(subject).to eq('/a/Faruk%20Hossain') }
+      end
+
       context 'incomplete params' do
         let(:params) { {} }
         let(:url_template) { '/a/:id' }

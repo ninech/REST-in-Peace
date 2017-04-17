@@ -1,4 +1,5 @@
 require 'rest_in_peace/errors'
+require 'addressable/uri'
 
 module RESTinPeace
   class TemplateSanitizer
@@ -21,7 +22,7 @@ module RESTinPeace
         raise IncompleteParams, "No parameter for token :#{token} found" unless param
         @url.sub!(%r{:#{token}}, param.to_s)
       end
-      @url
+      Addressable::URI.parse(@url).normalize.to_s
     end
 
     def tokens
