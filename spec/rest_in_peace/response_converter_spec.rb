@@ -42,6 +42,12 @@ describe RESTinPeace::ResponseConverter do
       specify { expect(subject).to eq('yolo binary stuff') }
     end
 
+    shared_examples_for 'a nil object input' do
+      let(:response_body) { nil }
+      specify { expect(subject).to be_instance_of(NilClass) }
+      specify { expect(subject).to eq(nil) }
+    end
+
     shared_examples_for 'an unknown input do' do
       let(:response_body) { Object }
       specify { expect { subject }.to raise_error(RESTinPeace::ResponseConverter::UnknownConvertStrategy) }
@@ -60,6 +66,10 @@ describe RESTinPeace::ResponseConverter do
       context 'input is a string' do
         it_behaves_like 'a string input'
       end
+
+      context 'input is a Nil object' do
+        it_behaves_like 'a nil object input'
+      end
     end
 
     context 'given type is an instance' do
@@ -74,6 +84,10 @@ describe RESTinPeace::ResponseConverter do
 
       context 'input is a string' do
         it_behaves_like 'a string input'
+      end
+
+      context 'input is a Nil object' do
+        it_behaves_like 'a nil object input'
       end
     end
   end

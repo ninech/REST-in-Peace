@@ -168,6 +168,27 @@ describe RESTinPeace do
       end
     end
 
+    describe '#update' do
+      let(:new_attributes) { { name: 'new_name', description: 'yoloswag' } }
+
+      subject { instance }
+
+      it 'saves record after update' do
+        expect(subject).to receive(:save)
+
+        subject.update(new_attributes)
+      end
+
+      specify do
+        expect { subject.update(new_attributes) }.
+          to change(instance, :description).from(attributes[:description]).to(new_attributes[:description])
+      end
+
+      specify do
+        expect { subject.update(new_attributes) }.to_not change(instance, :name).from(attributes[:name])
+      end
+    end
+
     describe 'validation handling' do
       before do
         def extended_class.model_name
@@ -176,7 +197,7 @@ describe RESTinPeace do
       end
 
       let(:description) { 'desc' }
-      let(:errors) { { description: ['must not be empty'] } }
+      let(:errors)      { { description: ['must not be empty'] } }
 
       specify { expect(instance).to respond_to(:read_attribute_for_validation).with(1).argument }
       specify { expect(instance.read_attribute_for_validation(:description)).to eq('desc') }
@@ -187,6 +208,12 @@ describe RESTinPeace do
 
       describe '#errors=' do
         specify { expect { instance.errors = errors }.to change { instance.errors.count } }
+
+        it 'correctly adds the error to the instance' do
+          instance.errors = errors
+
+          expect(instance.errors[:description]).to eq(['must not be empty'])
+        end
       end
 
       describe '#valid?' do

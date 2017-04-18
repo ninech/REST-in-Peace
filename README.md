@@ -10,17 +10,50 @@ A ruby REST client that lets you feel like in heaven when consuming APIs.
 
         gem 'rest-in-peace'
 
-2. Choose which http adapter you want to use
+2. Choose which HTTP client you want to use
 
         gem 'faraday'
+        
+3. Choose which HTTP adapter you want to use
+
+        gem 'excon'
 
 ## Usage
 
 ### HTTP Client Library
 
-There is no dependency on a specific HTTP client library but the client has been tested with [Faraday](https://github.com/lostisland/faraday) only. You can use any other client library as long as it has the same API as Faraday.
+This gem depends on the HTTP client library [Faraday](https://github.com/lostisland/faraday). REST-in-Peace has been tested in combination 
+with [Faraday](https://github.com/lostisland/faraday) and [Excon](https://github.com/excon/excon) only. 
 
 ### Configuration
+
+#### HTTP Client
+
+You need to configure and specify the HTTP client library to use. You can either specify a block (for lazy loading) or a client instance directly.
+
+```ruby
+class Resource
+  include RESTinPeace
+    
+  rest_in_peace do
+    use_api ->() do
+      ::Faraday.new(url: 'http://rip.dev', headers: { 'Accept' => 'application/json' }) do |faraday|
+        faraday.request :json
+        faraday.response :json
+        faraday.adapter :excon # make requests with Excon
+      end
+    end
+  end
+end
+
+class ResourceTwo
+  include RESTinPeace
+  
+  rest_in_peace do
+    use_api ->() { MyClient.api }
+  end
+end
+```
 
 #### Attributes
 
@@ -40,7 +73,7 @@ end
 
 #### API Endpoints
 
-You need to define all the API endpoints you want to consume with `RESTinPeace`. Currently the four HTTP verbs `GET`, `POST`, `PATCH` and `DELETE` are supported.
+You need to define all the API endpoints you want to consume with `REST-in-Peace`. Currently the five verbs `GET`, `POST`, `PUT`, `PATCH` and `DELETE` are supported.
 
 There are two sections where you can specify endpoints: `resource` and `collection`. `collection` supports the HTTP verb `GET` only.
 
@@ -51,28 +84,6 @@ rest_in_peace do
   end
   collection do
     get :find, '/rip/:id'
-  end
-end
-```
-
-#### HTTP Client Configuration
-
-You need to specify the HTTP client library to use. You can either specify a block (for lazy loading) or a client instance directly.
-
-```ruby
-class Resource
-  include RESTinPeace
-  
-  rest_in_peace do
-    use_api ->() { Faraday.new(url: 'http://rip.dev') }
-  end
-end
-
-class ResourceTwo
-  include RESTinPeace
-  
-  rest_in_peace do
-    use_api Faraday.new(url: 'http://rip.dev')
   end
 end
 ```
@@ -160,6 +171,7 @@ For easy interoperability with Rails, there is the ability to include ActiveMode
 
 ```ruby
 require 'rest_in_peace'
+require 'faraday'
 
 module MyClient
   class Fabric
@@ -184,11 +196,14 @@ module MyClient
 end
 ```
 
-#### Complete Configuration
+### Complete Configurations
 
-```ruby
+#### Configured Fabric class with all dependencies
+
+```ruby 
 require 'my_client/paginator'
 require 'rest_in_peace'
+require 'faraday'
 
 module MyClient
   class Fabric
@@ -219,6 +234,72 @@ module MyClient
   end
 end
 ```
+
+#### Configured Fabric class using Faraday
+
+```ruby
+require 'my_client/paginator'
+require 'rest_in_peace'
+require 'faraday'
+
+module MyClient
+  class Fabric
+    include RESTinPeace
+
+    rest_in_peace do
+      use_api ->() do
+        ::Faraday.new(url: 'http://localhost:3001', headers: { 'Accept' => 'application/json' }) do |faraday|
+          faraday.request :json
+          faraday.response :json
+          faraday.adapter :excon
+        end
+      end
+    
+      attributes do
+        read :id
+        write :name
+      end
+
+      resource do
+        patch :save, '/fabrics/:id'
+        post :create, '/fabrics'
+        delete :destroy, '/fabrics/:id'
+        get :reload, '/fabrics/:id'
+      end
+
+      collection do
+        get :all, '/fabrics', paginate_with: MyClient::Paginator
+        get :find, '/fabrics/:id'
+      end
+
+      acts_as_active_model
+    end
+  end
+end
+```
+
+#### CRUD options example of use
+```ruby
+# CREATE
+fabric = MyClient::Fabric.new(name: 'my new fabric')
+fabric.create # calls "POST /fabrics"
+fabric.reload # calls "GET /fabrics/1"
+
+# READ
+last_fabric = MyClient::Fabric.find(id: fabric.id) # calls "GET /fabrics/1"
+
+# UPDATE - first way
+updated_fabric = last_fabric.update_attributes(name: 'first way fabric')
+updated_fabric.save # calls "PATCH /fabrics/1"
+
+# UPDATE - second way 
+updated_fabric = last_fabric.update(name: 'second way fabric') # calls "PATCH /fabrics/1"
+
+# DELETE
+updated_fabric.destroy # calls "DELETE /fabrics/1"
+```
+Method `update_attributes` sets updated value, `save` method stores all changes. This change can be done with calling 
+single line method `update` which do the both things. 
 
 ## Helpers
 
@@ -255,3 +336,11 @@ Faraday.new do |faraday|
   # ...
 end
 ```
+
+## About
+
+This gem is currently maintained and funded by [nine.ch](https://nine.ch).
+
+[![nine.ch](https://blog.nine.ch/assets/logo.png)](https://nine.ch)
+
+We run your Linux server infrastructure – without interruptions, around the clock.

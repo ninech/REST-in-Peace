@@ -28,6 +28,8 @@ module RESTinPeace
         convert_from_hash
       when 'String'
         body
+      when 'NilClass'
+        nil
       else
         raise UnknownConvertStrategy, body.class
       end

@@ -46,6 +46,11 @@ module RESTinPeace
       valid?
     end
 
+    def update(attributes)
+      update_attributes(attributes)
+      save
+    end
+
     def valid?
       !errors.any?
     end
@@ -63,8 +68,10 @@ module RESTinPeace
     end
 
     def errors=(new_errors)
-      new_errors.each do |key, value|
-        errors.set(key.to_sym, [value].flatten)
+      new_errors.each do |field, errors|
+        errors.each do |error|
+          self.errors.add(field.to_sym, error)
+        end
       end
     end
   end

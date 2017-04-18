@@ -3,7 +3,6 @@ require 'active_support/core_ext/hash/indifferent_access'
 require 'rest_in_peace/definition_proxy'
 
 module RESTinPeace
-
   def self.included(base)
     base.send :extend, ClassMethods
     base.send :include, ActiveModel::Dirty
@@ -25,8 +24,9 @@ module RESTinPeace
         hash_representation[key.to_sym] = hash_representation_of_object(value)
       end
     else
-      hash_representation = to_h
+      hash_representation.merge!(to_write_only_hash)
     end
+
     if self.class.rip_namespace
       { id: id, self.class.rip_namespace => hash_representation }
     else
@@ -55,9 +55,11 @@ module RESTinPeace
 
   def to_h
     hash_representation = {}
+
     self.class.rip_attributes.values.flatten.each do |attr|
       hash_representation[attr] = send(attr)
     end
+
     hash_representation
   end
 
@@ -83,6 +85,10 @@ module RESTinPeace
     object
   end
 
+  def write_attribute?(attribute)
+    self.class.rip_attributes[:write].include?(attribute.to_sym)
+  end
+
   module ClassMethods
     attr_accessor :api
     attr_accessor :rip_namespace
@@ -104,6 +110,14 @@ module RESTinPeace
         read: [],
         write: [],
       }
+    end
+  end
+
+  private
+
+  def to_write_only_hash
+    self.class.rip_attributes[:write].inject({}) do |h, attr|
+      h.merge(attr => send(attr))
     end
   end
 end
