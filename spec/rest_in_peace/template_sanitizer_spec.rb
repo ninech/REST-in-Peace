@@ -86,18 +86,6 @@ describe RESTinPeace::TemplateSanitizer do
         specify { expect(subject).to eq('/a/1/b/asd') }
       end
 
-      context 'token with white space' do
-        let(:params) { { name: 'Faruk Hossain' } }
-        let(:url_template) { '/a/:name' }
-        specify { expect(subject).to eq('/a/Faruk%20Hossain') }
-      end
-
-      context 'token with dot(.) and space' do
-        let(:params) { { place: 'St. Helena' } }
-        let(:url_template) { '/a/:place' }
-        specify { expect(subject).to eq('/a/St.%20Helena') }
-      end
-
       context 'incomplete params' do
         let(:params) { {} }
         let(:url_template) { '/a/:id' }
@@ -132,9 +120,17 @@ describe RESTinPeace::TemplateSanitizer do
 
       context 'param which need to be encoded' do
         let(:params) { { id: 'this param need to be encoded' } }
-        let(:encoded_param) { 'this+param+need+to+be+encoded' }
+        let(:encoded_param) { 'this%20param%20need%20to%20be%20encoded' }
         let(:attributes) { { a_id: 2 } }
         let(:url_template) { '/a/:a_id/b/:id' }
+        specify { expect(subject).to eq("/a/2/b/#{encoded_param}") }
+      end
+
+      context 'param which need to be encoded is a string of dot(.) and space' do
+        let(:params) { { place: 'St. Helena' } }
+        let(:encoded_param) { 'St.%20Helena' }
+        let(:attributes) { { a_id: 2 } }
+        let(:url_template) { '/a/:a_id/b/:place' }
         specify { expect(subject).to eq("/a/2/b/#{encoded_param}") }
       end
 
