@@ -20,7 +20,7 @@ module RESTinPeace
         param = @params.delete(token.to_sym)
         param ||= @klass.send(token) if @klass.respond_to?(token)
         raise IncompleteParams, "No parameter for token :#{token} found" unless param
-        @url.sub!(%r{:#{token}}, CGI.escape(param.to_s))
+        @url.sub!(%r{:#{token}}, param.to_s)
       end
       Addressable::URI.parse(@url).normalize.to_s
     end
