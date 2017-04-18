@@ -92,6 +92,12 @@ describe RESTinPeace::TemplateSanitizer do
         specify { expect(subject).to eq('/a/Faruk%20Hossain') }
       end
 
+      context 'token with dot(.) and space' do
+        let(:params) { { place: 'St. Helena' } }
+        let(:url_template) { '/a/:place' }
+        specify { expect(subject).to eq('/a/St.%20Helena') }
+      end
+
       context 'incomplete params' do
         let(:params) { {} }
         let(:url_template) { '/a/:id' }
