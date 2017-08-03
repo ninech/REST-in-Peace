@@ -1,4 +1,5 @@
 require 'rest_in_peace/errors'
+require 'addressable/uri'
 
 module RESTinPeace
   class TemplateSanitizer
@@ -16,10 +17,14 @@ module RESTinPeace
       return @url if @url
       @url = @url_template.dup
       tokens.each do |token|
-        param = @params.delete(token.to_sym)
+        param = @params[token.to_sym]
         param ||= @klass.send(token) if @klass.respond_to?(token)
         raise IncompleteParams, "No parameter for token :#{token} found" unless param
-        @url.sub!(%r{:#{token}}, CGI.escape(param.to_s))
+        if @params.include?(token.to_sym)
+          @url.sub!(%r{:#{token}}, CGI.escape(param.to_s))
+        else
+          @url.sub!(%r{:#{token}}, Addressable::URI.parse(param.to_s).normalize.to_s)
+        end
       end
       @url
     end

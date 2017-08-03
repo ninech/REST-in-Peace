@@ -118,12 +118,29 @@ describe RESTinPeace::TemplateSanitizer do
         specify { expect { subject }.to raise_error(RESTinPeace::TemplateSanitizer::IncompleteParams) }
       end
 
-      context 'param which need to be encoded' do
+      context 'param which need to be encoded is white space separated string' do
         let(:params) { { id: 'this param need to be encoded' } }
         let(:encoded_param) { 'this+param+need+to+be+encoded' }
         let(:attributes) { { a_id: 2 } }
         let(:url_template) { '/a/:a_id/b/:id' }
         specify { expect(subject).to eq("/a/2/b/#{encoded_param}") }
+      end
+
+      context 'path which need to be encoded is white space separated string' do
+        let(:params) { { id: 1 } }
+        let(:attributes) { { a_name: 'with space' } }
+        let(:encoded_path) { 'with%20space' }
+        let(:url_template) { '/a/:a_name/b/:id' }
+        specify { expect(subject).to eq("/a/#{encoded_path}/b/1") }
+      end
+
+      context 'path and param which need to be encoded are white space separated string' do
+        let(:params) { { place: 'dhaini kata' } }
+        let(:encoded_param) { 'dhaini+kata' }
+        let(:attributes) { { a_name: 'with space' } }
+        let(:encoded_path) { 'with%20space' }
+        let(:url_template) { '/a/:a_name/b/:place' }
+        specify { expect(subject).to eq("/a/#{encoded_path}/b/#{encoded_param}") }
       end
 
       context 'param which need to be encoded is null string' do
@@ -134,11 +151,25 @@ describe RESTinPeace::TemplateSanitizer do
         specify { expect(subject).to eq("/a/2/b/#{encoded_param}") }
       end
 
+      context 'path which need to be encoded is null string' do
+        let(:params) { { id: 1 } }
+        let(:attributes) { { a_name: '' } }
+        let(:url_template) { '/a/:a_name/b/:id' }
+        specify { expect(subject).to eq('/a//b/1') }
+      end
+
       context 'param which need to be encoded is nil' do
         let(:params) { { id: nil } }
         let(:encoded_param) { '' }
         let(:attributes) { { a_id: 2 } }
         let(:url_template) { '/a/:a_id/b/:id' }
+        specify { expect { subject }.to raise_exception(RESTinPeace::TemplateSanitizer::IncompleteParams) }
+      end
+
+      context 'path which need to be encoded is nil' do
+        let(:params) { { id: 1 } }
+        let(:attributes) { { a_name: nil } }
+        let(:url_template) { '/a/:a_name/b/:id' }
         specify { expect { subject }.to raise_exception(RESTinPeace::TemplateSanitizer::IncompleteParams) }
       end
     end
