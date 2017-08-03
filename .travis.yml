@@ -22,3 +22,9 @@ matrix:
       gemfile: gemfiles/Gemfile.activemodel-5.0.x
     - rvm: 2.1.2
       gemfile: gemfiles/Gemfile.activemodel-5.0.x
+notifications:
+  slack:
+    on_success: always
+    on_failure: always
+    rooms:
+      secure: VKDJrfgm1c9OUaQPyMutsVzMCwZzBQh7qxVGJnsdNOHOLtVrc6dQrC6+w7Zc1Py5H5pUU+roKi2n5rVnhNjHf4xukGEdDpI0JBBgYSZjl9b/RbxBsHYG9Z8tUQ0EZ7Bd9H3eH2LHQvjoEcvvUJ6I2BCbXlPCrMovfEB3ILQ8Ryo=
