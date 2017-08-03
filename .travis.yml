@@ -28,6 +28,7 @@ matrix:
     - rvm: 2.1.2
       gemfile: gemfiles/Gemfile.activemodel-5.1.x
 notifications:
+  email: false
   slack:
     on_success: always
     on_failure: always
