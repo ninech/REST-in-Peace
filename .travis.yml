@@ -13,6 +13,7 @@ gemfile:
   - gemfiles/Gemfile.activemodel-4.1.x
   - gemfiles/Gemfile.activemodel-4.2.x
   - gemfiles/Gemfile.activemodel-5.0.x
+  - gemfiles/Gemfile.activemodel-5.1.x
 script:
   - bundle exec rake spec
 before_install: gem install bundler
@@ -22,6 +23,10 @@ matrix:
       gemfile: gemfiles/Gemfile.activemodel-5.0.x
     - rvm: 2.1.2
       gemfile: gemfiles/Gemfile.activemodel-5.0.x
+    - rvm: 2.0.0
+      gemfile: gemfiles/Gemfile.activemodel-5.1.x
+    - rvm: 2.1.2
+      gemfile: gemfiles/Gemfile.activemodel-5.1.x
 notifications:
   slack:
     on_success: always
