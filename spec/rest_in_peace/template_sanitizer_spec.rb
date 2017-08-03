@@ -5,7 +5,6 @@ describe RESTinPeace::TemplateSanitizer do
   let(:attributes) { {} }
   let(:template_sanitizer) { RESTinPeace::TemplateSanitizer.new(url_template, params, klass) }
 
-
   context 'with class' do
     let(:klass) { OpenStruct }
 
@@ -14,6 +13,12 @@ describe RESTinPeace::TemplateSanitizer do
 
       context 'single token' do
         let(:params) { { id: 1 } }
+        let(:url_template) { '/a/:id' }
+        specify { expect(subject).to eq('/a/1') }
+      end
+
+      context 'single token with extra params' do
+        let(:params) { { id: 1, something: 'else' } }
         let(:url_template) { '/a/:id' }
         specify { expect(subject).to eq('/a/1') }
       end
