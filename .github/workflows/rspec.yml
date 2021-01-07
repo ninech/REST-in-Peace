@@ -7,11 +7,7 @@
 
 name: Ruby CI
 
-on:
-  push:
-    branches: [ $default-branch ]
-  pull_request:
-    branches: [ $default-branch ]
+on: [push, pull_request]
 
 jobs:
   test:
@@ -20,8 +16,11 @@ jobs:
 
     strategy:
       matrix:
-        ruby-version: [2.4.x, 2.5.x, 2.6.x, 2.7.x]
+        ruby-version: [2.4.10, 2.5.8, 2.6.6, 2.7.2]
         activemodel: [4.2.x, 5.1.x, 5.2.x]
+        exclude:
+          - ruby-version: 2.7.2
+            activemodel: 4.2.x
 
     steps:
     - uses: actions/checkout@v2
