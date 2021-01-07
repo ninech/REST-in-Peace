@@ -1,32 +1,17 @@
 language: ruby
 cache: bundler
 rvm:
-  - 2.0.0
-  - 2.1.2
-  - 2.2.5
-  - 2.3.1
-  - 2.3.4
   - 2.4.1
+  - 2.6.6
+  - 2.7.2
 gemfile:
-  - gemfiles/Gemfile.activemodel-3.2.x
-  - gemfiles/Gemfile.activemodel-4.0.x
-  - gemfiles/Gemfile.activemodel-4.1.x
   - gemfiles/Gemfile.activemodel-4.2.x
-  - gemfiles/Gemfile.activemodel-5.0.x
   - gemfiles/Gemfile.activemodel-5.1.x
+  - gemfiles/Gemfile.activemodel-5.2.x
 script:
   - bundle exec rake spec
 before_install: gem install bundler
-matrix:
-  exclude:
-    - rvm: 2.0.0
-      gemfile: gemfiles/Gemfile.activemodel-5.0.x
-    - rvm: 2.1.2
-      gemfile: gemfiles/Gemfile.activemodel-5.0.x
-    - rvm: 2.0.0
-      gemfile: gemfiles/Gemfile.activemodel-5.1.x
-    - rvm: 2.1.2
-      gemfile: gemfiles/Gemfile.activemodel-5.1.x
+matrix: {}
 notifications:
   email: false
   slack:
