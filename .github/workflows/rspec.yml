@@ -17,10 +17,14 @@ jobs:
     strategy:
       matrix:
         ruby-version: [2.4.10, 2.5.8, 2.6.6, 2.7.2]
-        activemodel: [4.2.x, 5.1.x, 5.2.x]
+        activemodel: [4.2.x, 5.1.x, 5.2.x, 6.0.x, 6.1.x]
         exclude:
           - ruby-version: 2.7.2
             activemodel: 4.2.x
+          - ruby-version: 2.4.10
+            activemodel: 6.0.x
+          - ruby-version: 2.4.10
+            activemodel: 6.1.x
 
     steps:
     - uses: actions/checkout@v2
