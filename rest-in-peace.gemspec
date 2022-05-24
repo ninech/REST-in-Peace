@@ -17,7 +17,8 @@ Gem::Specification.new do |s|
   s.executables   = `git ls-files -- bin/*`.split("\n").map{ |f| File.basename(f) }
   s.require_paths = ['lib']
 
-  s.add_runtime_dependency 'activemodel', '>= 3.2', '< 7'
+  s.required_ruby_version = '>= 2.4'
+  s.add_runtime_dependency 'activemodel', '>= 5.0', '< 8'
   s.add_runtime_dependency 'addressable', '~> 2.5'
 
   s.add_development_dependency 'rake', '~> 10.0'
