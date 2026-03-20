@@ -5,9 +5,9 @@ $:.push File.expand_path('../lib', __FILE__)
 Gem::Specification.new do |s|
   s.name        = 'rest-in-peace'
   s.version     = File.read(File.expand_path('../VERSION', __FILE__)).strip
-  s.authors     = ['NINE Internet Soultions AG']
+  s.authors     = ['Nine Internet Solutions AG']
   s.email       = ['support@nine.ch']
-  s.homepage    = 'http://github.com/ninech/'
+  s.homepage    = 'https://github.com/ninech/REST-in-Peace'
   s.license     = 'MIT'
   s.summary     = 'REST in peace'
   s.description = 'Let your api REST in peace.'
@@ -17,8 +17,8 @@ Gem::Specification.new do |s|
   s.executables   = `git ls-files -- bin/*`.split("\n").map{ |f| File.basename(f) }
   s.require_paths = ['lib']
 
-  s.required_ruby_version = '>= 2.4'
-  s.add_runtime_dependency 'activemodel', '>= 5.0', '< 8'
+  s.required_ruby_version = '>= 2.5'
+  s.add_runtime_dependency 'activemodel', '>= 6.0', '< 9'
   s.add_runtime_dependency 'addressable', '~> 2.5'
 
   s.add_development_dependency 'rake', '~> 13.0'

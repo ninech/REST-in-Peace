@@ -12,27 +12,27 @@ module RESTinPeace
     end
 
     def get
-      response = api.get(url, params)
+      response = api.get(url, **params)
       convert_response(response)
     end
 
     def post
-      response = api.post(url, params)
+      response = api.post(url, **params)
       convert_response(response)
     end
 
     def patch
-      response = api.patch(url, params)
+      response = api.patch(url, **params)
       convert_response(response)
     end
 
     def put
-      response = api.put(url, params)
+      response = api.put(url, **params)
       convert_response(response)
     end
 
     def delete
-      response = api.delete(url, params)
+      response = api.delete(url, **params)
       convert_response(response)
     end
 
