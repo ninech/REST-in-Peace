@@ -1,3 +1,4 @@
+require 'logger'
 require 'active_model'
 require 'active_support/core_ext/object/blank'
 

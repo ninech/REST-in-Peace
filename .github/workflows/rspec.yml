@@ -16,22 +16,24 @@ jobs:
 
     strategy:
       matrix:
-        ruby-version: [2.4.10, 2.5.9, 2.6.10, 2.7.6]
-        activemodel: [5.1.x, 5.2.x, 6.0.x, 6.1.x, 7.0.x]
+        ruby-version: [2.5.9, 2.6.10, 2.7.6, 3.2.10]
+        activemodel: [6.0.x, 6.1.x, 7.0.x, 8.0.x]
         exclude:
-          - ruby-version: 2.4.10
-            activemodel: 6.0.x
-          - ruby-version: 2.4.10
-            activemodel: 6.1.x
-          - ruby-version: 2.4.10
+          - ruby-version: 2.5.9
             activemodel: 7.0.x
           - ruby-version: 2.5.9
             activemodel: 7.0.x
+          - ruby-version: 2.5.9
+            activemodel: 8.0.x
           - ruby-version: 2.6.10
             activemodel: 7.0.x
+          - ruby-version: 2.6.10
+            activemodel: 8.0.x
+          - ruby-version: 2.7.6
+            activemodel: 8.0.x
 
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v6
     - name: Set up Ruby
       uses: ruby/setup-ruby@v1
       with:
